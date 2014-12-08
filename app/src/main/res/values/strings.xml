@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Love 2 Brew</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hotcoffee">Hot Coffee</string>
+    <string name="coldcoffee">Cold Coffee</string>
+    <string name="title_activity_tabbed_brewer">TabbedBrewer</string>
+    <string name="title_section1">Overview</string>
+    <string name="title_section2">History</string>
+    <string name="title_section3">How It Works</string>
+    <string name="title_section4">Steps</string>
+
+</resources>

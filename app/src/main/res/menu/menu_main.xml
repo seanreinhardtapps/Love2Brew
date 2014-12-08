@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item   android:title="More"
+            android:showAsAction="ifRoom|withText"
+            android:icon="@drawable/ic_menu_moreoverflow_normal_holo_dark"
+            android:id="@+id/menu_reports" >
+    <menu>
+        <item   android:title="Main Menu"
+                android:showAsAction="ifRoom|withText"
+
+                android:id="@+id/menu_top"/>
+
+        <item   android:title="Set Reminder"
+                android:showAsAction="ifRoom|withText"
+
+                android:id="@+id/menu_alarm"/>
+    </menu>
+    </item>
+</menu>
