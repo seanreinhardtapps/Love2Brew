@@ -21,18 +21,22 @@ public class Brewer {
         private String history;
         private String steps;
         private byte[] imagePayload;
+        private Bitmap decodedImage;
 
     public void setImagePayload(byte[] imagePayload) {
         this.imagePayload = imagePayload;
     }
 
-    private Bitmap decodedImage;
+
 
     public Bitmap getDecodedImage() {
         return decodedImage;
     }
 
-
+        public byte[] getImagePayload()
+        {
+            return imagePayload;
+        }
 
         @Override
         public String toString() {

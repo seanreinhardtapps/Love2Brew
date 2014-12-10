@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
-
+    ImageView img;
     Spinner hotSpinner;
     Spinner coldSpinner;
     public List<Brewer> hotBrewers = new ArrayList<Brewer>();
@@ -48,7 +49,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     public static final String ATAG = "Alarm Activity";
 
     //Server Location
-    public final String SERVER = "";
+    public final String SERVER = "http://www.sanclementedev.org/Love2Brew/api/CoffeeBrewers/";
 
 
     @Override
@@ -58,12 +59,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
 
         hotSpinner = (Spinner) findViewById(R.id.spnHot);
         coldSpinner = (Spinner) findViewById(R.id.spnCold);
-
+         img = (ImageView)findViewById(R.id.img);
 
         hotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                SetAnImage(position);
             }
 
             @Override
@@ -75,7 +76,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         coldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                SetAnImage(position);
             }
 
             @Override
@@ -100,6 +101,15 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
                 System.currentTimeMillis() + FIVE_MIN_ALARM_DELAY,
                 mCoffeeReceiverPendingIntent);
 
+        checkUpdates();
+    }
+
+    private void SetAnImage(int position) {
+        Log.d(MTAG,"Trying to set an image");
+        Brewer brewer = hotBrewers.get(position);
+
+            Log.d(MTAG,"image"+ brewer.getImagePayload()[0] +" "+brewer.getImagePayload()[1]);
+        img.setImageBitmap(brewer.getDecodedImage());
     }
 
     private void LoadHotTempSpinner()
@@ -190,7 +200,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
                 brewer.setHistory(jsonObject.getString("history"));
                 brewer.setSteps(jsonObject.getString("steps"));
                 brewer.setImagePayload(jsonObject.getString("imagePayload").getBytes());
-
+                brewer.convertImage();
                 if (brewer.getTemp() == 1)
                     hotBrewers.add(brewer);
                 else
