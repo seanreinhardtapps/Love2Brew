@@ -6,7 +6,12 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +25,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +76,16 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         hotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SetAnImage(position);
+
+               /* try {
+                    //createImageFile(position);
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.d(MTAG, "Error in image file creation");
+                }*/
+                new DownloadPicTask().execute(position);
+
+                //OpenBrewer(position);
             }
 
             @Override
@@ -76,7 +97,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         coldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SetAnImage(position);
+                OpenBrewer(position);
             }
 
             @Override
@@ -104,12 +125,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         checkUpdates();
     }
 
-    private void SetAnImage(int position) {
-        Log.d(MTAG,"Trying to set an image");
-        Brewer brewer = hotBrewers.get(position);
+    private void OpenBrewer(int position) {
 
-            Log.d(MTAG,"image"+ brewer.getImagePayload()[0] +" "+brewer.getImagePayload()[1]);
-        img.setImageBitmap(brewer.getDecodedImage());
+        Log.d(MTAG,"Trying to set an image");
+        Intent intent = new Intent(this,TabbedBrewer.class);
+        intent.putExtra("Brewer", position);
+        startActivity(intent);
     }
 
     private void LoadHotTempSpinner()
@@ -219,5 +240,127 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     @Override
     public void onGetHttpSuccess(String results) {
         AllUpdates(results);
+    }
+
+
+   // private File createImageFile(int position) throws IOException {
+
+
+        /*FileOutputStream fos = new FileOutputStream(file);
+        write your byteArray here
+                fos.write(brewer.getImagePayload());
+                fos.flush();
+                fos.close();*/
+
+        /*FileOutputStream fOut = new FileOutputStream(file);
+        //Bitmap bmp = BitmapFactory.decodeByteArray(brewer.getImagePayload(), 0, brewer.getImagePayload().length);
+        ByteArrayInputStream byt = new ByteArrayInputStream(brewer.getImagePayload());
+        Bitmap bmp=BitmapFactory.decodeStream(byt);
+        if (bmp == null)
+            Log.d("AAA", "Null bitmap");
+        else {
+            bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+
+        }
+        */
+
+       /* try {
+            InputStream is = (InputStream) new URL("http://www.sanclementedev.org/Love2Brew/Content/images/image1.png").getContent();
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+
+        } catch (Exception e) {
+            Log.d("AAA", "Did not connect");
+            return null;
+        }
+        if (bmp == null)
+            Log.d("AAA", "Null bitmap");
+        else {
+            Log.d("AAA", "Good bitmap");
+
+            bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
+            fos.flush();
+            fos.close();
+        }*/
+
+
+
+
+        //return file;
+    //}
+
+}
+
+class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
+
+
+    @Override
+    protected Void doInBackground(Integer... position) {
+        // Create an image file name
+
+        String imageFileName = "/PNG_BREWERf_" + position;
+        Log.d("FILE", "Find Directory");
+
+        //Find public pictures directory
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        Log.d(MainActivity.MTAG, "Directory: " + storageDir);
+
+        //Call in case directory is missing - - not normally needed
+        storageDir.mkdirs();
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES) + imageFileName + ".png");
+
+
+       // Brewer brewer = MainActivity.hotBrewers.get(position);
+
+
+
+        Bitmap bmp;
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            java.net.URL url = new java.net.URL("http://www.sanclementedev.org/Love2Brew/Content/images/image1.png");
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK) {
+                Log.d("AAA", "Good Connection");
+                InputStream input = connection.getInputStream();
+                bmp = BitmapFactory.decodeStream(input);
+                //return myBitmap;
+                if (bmp == null)
+                    Log.d("AAA", "Null bitmap");
+                else {
+                    Log.d("AAA", "Good bitmap");
+                    bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
+                    assert fos != null;
+                    fos.flush();
+                    fos.close();
+                }
+            }
+            else
+                Log.d("AAA", "Bad Connection");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    protected void onPostExecute() {
+        // check this.exception
+        // do something with the feed
+        Log.d("AAA", "Finished?!");
     }
 }
