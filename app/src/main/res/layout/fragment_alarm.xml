@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="3">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:src="@drawable/ic_menu_recent_history"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pick a Reminder"
+        android:id="@+id/textView"
+        android:layout_row="0"
+        android:layout_column="1"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12Hr Cold Brew"
+        android:id="@+id/button1"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:onClick="onClk"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="24Hr Cold Brew"
+        android:id="@+id/button2"
+        android:layout_row="1"
+        android:layout_column="2"
+        android:onClick="onClk"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 Min Reminder"
+        android:id="@+id/button3"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:onClick="onClk"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="90 Sec Reminder"
+        android:id="@+id/button4"
+        android:layout_row="2"
+        android:layout_column="2"
+        android:onClick="onClk"/>
+
+</GridLayout>

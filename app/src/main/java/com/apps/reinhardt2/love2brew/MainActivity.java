@@ -3,7 +3,9 @@ package com.apps.reinhardt2.love2brew;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -51,20 +53,21 @@ import java.util.List;
 
  ***********************************************************************************************/
 public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
+    public static PendingIntent mCoffeeReceiverPendingIntent;
     ImageView img;
     Spinner hotSpinner;
     Spinner coldSpinner;
     public List<Brewer> hotBrewers = new ArrayList<Brewer>();
     public List<Brewer> coldBrewers = new ArrayList<Brewer>();
 
-    AlarmManager mCoffeeAlarmManager;
-    private PendingIntent mCoffeeReceiverPendingIntent;
+    static AlarmManager mCoffeeAlarmManager;
+    //public PendingIntent mCoffeeReceiverPendingIntent;
 
     // Alarm Constants
-    private static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hr Alarm Const
-    private static final long TWENTYFOUR_HOUR_ALARM_DELAY = 24* 60 * 60 * 1000;// 24 Hr Alarm Const
-    private static final long FIVE_MIN_ALARM_DELAY = 5 * 60 * 1000;  // 5 Minute Alarm Const
-    private static final long NINETY_SEC_ALARM_DELAY = 90 * 1000;  // 90 Second Alarm Const
+    public static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hr Alarm Const
+    public static final long TWENTYFOUR_HOUR_ALARM_DELAY = 24* 60 * 60 * 1000;// 24 Hr Alarm Const
+    public static final long FIVE_MIN_ALARM_DELAY = 5 * 60 * 1000;  // 5 Minute Alarm Const
+    public static final long NINETY_SEC_ALARM_DELAY = 90 * 1000;  // 90 Second Alarm Const
 
     //Tag Constants for log calls
     public static final String MTAG = "Main Activity";
@@ -310,10 +313,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
                 break;
             case R.id.menu_alarm:
                 //TODO Launch Dialog Activity
-                // Set single alarm
-                mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + FIVE_MIN_ALARM_DELAY,
-                        mCoffeeReceiverPendingIntent);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                AlarmDialogFrag newFragment = new AlarmDialogFrag();
+                newFragment.show(ft,"Alarm");
+
                 break;
             default:
                 break;
