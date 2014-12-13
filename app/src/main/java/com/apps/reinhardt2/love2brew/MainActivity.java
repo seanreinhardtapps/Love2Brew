@@ -3,7 +3,6 @@ package com.apps.reinhardt2.love2brew;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -19,8 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +54,6 @@ import java.util.List;
  ***********************************************************************************************/
 public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     public static PendingIntent mCoffeeReceiverPendingIntent;
-    ImageView img;
     Spinner hotSpinner;
     Spinner coldSpinner;
     public List<Brewer> hotBrewers = new ArrayList<Brewer>();
@@ -71,7 +70,6 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
 
     //Tag Constants for log calls
     public static final String MTAG = "Main Activity";
-    public static final String TTAG = "Tabbed Activity";
     public static final String ATAG = "Alarm Activity";
 
     //Server Location
@@ -92,7 +90,6 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         // UI Objects
         hotSpinner = (Spinner) findViewById(R.id.spnHot);
         coldSpinner = (Spinner) findViewById(R.id.spnCold);
-        img = (ImageView)findViewById(R.id.img);
 
         // Register Event listeners for Hot Brewer Spinner
         hotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -312,7 +309,6 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
 
                 break;
             case R.id.menu_alarm:
-                //TODO Launch Dialog Activity
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 AlarmDialogFrag newFragment = new AlarmDialogFrag();
                 newFragment.show(ft,"Alarm");
@@ -348,6 +344,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
                 (DialogFragment)fragmentManager.findFragmentByTag("progressFrag");
         if (dialogFragment != null)
             dialogFragment.dismiss();
+    }
+
+    /****************************************************************************************
+     PopToast() Display quick messages to user
+     ***************************************************************************************/
+    public void PopToast(String text){
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
 }// End - MainActivity Class

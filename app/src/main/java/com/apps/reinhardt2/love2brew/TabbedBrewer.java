@@ -21,7 +21,8 @@ import android.widget.TextView;
 
 
 public class TabbedBrewer extends FragmentActivity {
-
+    //Tag Constants for log calls
+    public static final String TTAG = "Tabbed Activity";
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 

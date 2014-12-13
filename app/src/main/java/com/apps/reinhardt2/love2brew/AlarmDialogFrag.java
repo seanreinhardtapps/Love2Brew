@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * SEANREINHARDTAPPS
@@ -31,40 +33,54 @@ public class AlarmDialogFrag extends DialogFragment {
      onCreateDialog()
      Dialog Builder is called to display Dialog Fragment
      *******************************************************************************************/
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_alarm, container, false);
+        Button button1 = (Button)v.findViewById(R.id.button1);
+        Button button2 = (Button)v.findViewById(R.id.button2);
+        Button button3 = (Button)v.findViewById(R.id.button3);
+        Button button4 = (Button)v.findViewById(R.id.button4);
 
-
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + MainActivity.TWELVE_HOUR_ALARM_DELAY,
+                        MainActivity.mCoffeeReceiverPendingIntent);
+                dismiss();
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + MainActivity.TWENTYFOUR_HOUR_ALARM_DELAY,
+                        MainActivity.mCoffeeReceiverPendingIntent);
+                dismiss();
+            }
+        });
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + MainActivity.FIVE_MIN_ALARM_DELAY,
+                        MainActivity.mCoffeeReceiverPendingIntent);
+                dismiss();
+            }
+        });
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + MainActivity.NINETY_SEC_ALARM_DELAY,
+                        MainActivity.mCoffeeReceiverPendingIntent);
+                //MainActivity.PopToast("Reminder Set");
+                dismiss();
+            }
+        });
         return v;
     }
 
 
-    public void onClk(View view) {
-        switch(view.getId()){
-            case(R.id.button1):
-                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + MainActivity.TWELVE_HOUR_ALARM_DELAY,
-                        MainActivity.mCoffeeReceiverPendingIntent);
-                break;
-            case(R.id.button2):
-                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + MainActivity.TWENTYFOUR_HOUR_ALARM_DELAY,
-                        MainActivity.mCoffeeReceiverPendingIntent);
-                break;
-            case(R.id.button3):
-                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + MainActivity.FIVE_MIN_ALARM_DELAY,
-                        MainActivity.mCoffeeReceiverPendingIntent);
-                break;
-            case(R.id.button4):
-                MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + MainActivity.NINETY_SEC_ALARM_DELAY,
-                        MainActivity.mCoffeeReceiverPendingIntent);
-                break;
-        }
 
-    }
 }//end - AlertDialogFrag Class

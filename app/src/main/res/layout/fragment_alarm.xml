@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="3">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:tag="Reminder">
 
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_row="0"
-        android:layout_column="0"
         android:src="@drawable/ic_menu_recent_history"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Pick a Reminder"
         android:id="@+id/textView"
-        android:layout_row="0"
-        android:layout_column="1"
-        />
+        android:textSize="26dp"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_alignBottom="@+id/imageView" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="126dp"
         android:layout_height="wrap_content"
-        android:text="12Hr Cold Brew"
-        android:id="@+id/button1"
-        android:layout_row="1"
-        android:layout_column="1"
-        android:onClick="onClk"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="24Hr Cold Brew"
-        android:id="@+id/button2"
-        android:layout_row="1"
-        android:layout_column="2"
-        android:onClick="onClk"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="5 Min Reminder"
+        android:text="@string/fivemin"
         android:id="@+id/button3"
-        android:layout_row="2"
-        android:layout_column="1"
-        android:onClick="onClk"/>
+        android:layout_below="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:textSize="12dp"
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="126dp"
         android:layout_height="wrap_content"
-        android:text="90 Sec Reminder"
+        android:text="@string/ninetysec"
         android:id="@+id/button4"
-        android:layout_row="2"
-        android:layout_column="2"
-        android:onClick="onClk"/>
+        android:layout_below="@+id/button1"
+        android:layout_toEndOf="@+id/button2"
+        android:textSize="12dp" />
 
-</GridLayout>
+    <Button
+        android:layout_width="126dp"
+        android:layout_height="wrap_content"
+        android:text="@string/twentyfour"
+        android:id="@+id/button2"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:textSize="12dp" />
+
+    <Button
+        android:layout_width="126dp"
+        android:layout_height="wrap_content"
+        android:text="@string/twelvehour"
+        android:id="@+id/button1"
+        android:layout_toEndOf="@+id/button2"
+        android:layout_below="@+id/imageView"
+        android:textSize="12dp" />
+
+
+</RelativeLayout>

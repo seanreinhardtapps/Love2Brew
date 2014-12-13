@@ -11,5 +11,9 @@
     <string name="title_section2">History</string>
     <string name="title_section3">How It Works</string>
     <string name="title_section4">Steps</string>
+    <string name="ninetysec">90 Sec Reminder</string>
+    <string name="twentyfour">24Hr Cold Brew</string>
+    <string name="twelvehour">12Hr Cold Brew</string>
+    <string name="fivemin">5 Min Reminder</string>
 
 </resources>
