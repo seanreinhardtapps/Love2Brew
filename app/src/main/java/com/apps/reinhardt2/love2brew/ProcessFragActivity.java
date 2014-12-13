@@ -6,8 +6,18 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 
 /**
- * Created by Sean on 12/6/2014.
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
  */
+
+/**********************************************************************************************
+ ProcessFragActivity - Produces a Dialog Fragment
+***********************************************************************************************/
 public class ProcessFragActivity extends DialogFragment {
 
     @Override

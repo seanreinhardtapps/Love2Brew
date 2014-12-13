@@ -12,10 +12,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+/**
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
+ */
+
+/**********************************************************************************************
+ AlarmnitificationReceiver
+ Sets up the intent that will execute when the AlarmReciever is triggered by the system
+ Publishes a notification to the notification center
+ ***********************************************************************************************/
 public class AlarmNotificationReceiver extends BroadcastReceiver {
 	// Notification ID to allow for future updates
 	private static final int ALARM_NOTIFICATION_ID = 11;
-
 
 	// Notification Text Elements
 	private final CharSequence tickerText = "Coffee Reminder";

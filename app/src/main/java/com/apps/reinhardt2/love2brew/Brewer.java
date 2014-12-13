@@ -8,11 +8,22 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Created by Sean on 12/7/2014.
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
  */
+
+/**********************************************************************************************
+ Brewer Class
+ Model of Brewer - contains data and methods related to a coffee brewer
+ ***********************************************************************************************/
 public class Brewer {
 
-
+        //Instance Variables
         private int id;
         private String name;
         private int temp;
@@ -20,36 +31,36 @@ public class Brewer {
         private String howItWorks;
         private String history;
         private String steps;
-        private byte[] imagePayload;
-        private Bitmap decodedImage;
+        private String imageLocation;
 
-    public void setImagePayload(byte[] imagePayload) {
-        this.imagePayload = imagePayload;
+    /******************************************************************************************
+     Override of toString - Prints name of coffee brewer
+     *****************************************************************************************/
+    @Override
+    public String toString() {
+        return name;
     }
 
-
-
-    public Bitmap getDecodedImage() {
-        return decodedImage;
+    /******************************************************************************************
+     Public Getter Methods
+     Public Setter Methods
+     *****************************************************************************************/
+    public int getId() {
+        return id;
     }
 
-        public byte[] getImagePayload()
-        {
-            return imagePayload;
-        }
+    public void setId(int id) {
+        this.id = id;
+        this.imageLocation = "PNG_BREWER_" + id;
+    }
 
-        @Override
-        public String toString() {
-            return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getTemp() {
         return temp;
@@ -91,20 +102,9 @@ public class Brewer {
         this.steps = steps;
     }
 
-    public void convertImage() {
-
-            this.decodedImage = BitmapFactory.decodeByteArray(this.imagePayload, 0, this.imagePayload.length);
+    public String getImageLocation() {
+        return imageLocation;
     }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-}
+}// end - Brewer Class
 
 

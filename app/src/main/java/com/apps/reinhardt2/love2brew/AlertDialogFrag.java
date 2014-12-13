@@ -7,8 +7,19 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
- * Created by Sean on 10/19/2014.
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
  */
+
+/**********************************************************************************************
+ AlertDialogFrag Class
+ Produces a Dialog Fragment
+ ***********************************************************************************************/
 public class AlertDialogFrag extends DialogFragment {
     String mTitle = "";
     String mMessage = "";
@@ -21,6 +32,10 @@ public class AlertDialogFrag extends DialogFragment {
         this.mMessage = message;
     }
 
+    /********************************************************************************************
+     onCreateDialog()
+     Dialog Builder is called to display Dialog Fragment
+     *******************************************************************************************/
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

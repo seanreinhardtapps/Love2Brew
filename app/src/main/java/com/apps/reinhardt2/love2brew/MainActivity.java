@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,23 +19,29 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
+ */
+
+/**********************************************************************************************
     Main activity of Love2Brew App
     Implements GetHttp.IGetHttpListener to download JSON data of coffee brewers from web service
     Loads and displays spinners to select from hot or cold coffee brewers
@@ -44,7 +49,7 @@ import java.util.List;
     Menu bar contains button open dialog box for alarm
     Alarm dialog box allows user to register an alarm for a reminder
 
- */
+ ***********************************************************************************************/
 public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     ImageView img;
     Spinner hotSpinner;
@@ -52,16 +57,14 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     public List<Brewer> hotBrewers = new ArrayList<Brewer>();
     public List<Brewer> coldBrewers = new ArrayList<Brewer>();
 
-    File photoFile;
     AlarmManager mCoffeeAlarmManager;
     private PendingIntent mCoffeeReceiverPendingIntent;
-    private String mCurrentPhotoPath;
 
     // Alarm Constants
-    private static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hour Alarm Constant
-    private static final long TWENTYFOUR_HOUR_ALARM_DELAY = 24* 60 * 60 * 1000;  // 24 Hour Alarm Constant
-    private static final long FIVE_MIN_ALARM_DELAY = 5 * 60 * 1000;  // 5 Minute Alarm Constant
-    private static final long NINETY_SEC_ALARM_DELAY = 90 * 1000;  // 90 Second Alarm Constant
+    private static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hr Alarm Const
+    private static final long TWENTYFOUR_HOUR_ALARM_DELAY = 24* 60 * 60 * 1000;// 24 Hr Alarm Const
+    private static final long FIVE_MIN_ALARM_DELAY = 5 * 60 * 1000;  // 5 Minute Alarm Const
+    private static final long NINETY_SEC_ALARM_DELAY = 90 * 1000;  // 90 Second Alarm Const
 
     //Tag Constants for log calls
     public static final String MTAG = "Main Activity";
@@ -71,7 +74,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     //Server Location
     public final String SERVER = "http://www.sanclementedev.org/Love2Brew/api/CoffeeBrewers/";
 
-
+    /*****************************************************************************************
+     onCreate()
+     -inflate view
+     -Register listeners for Hot and Cold Temp Spinners
+     -Setup of Alarm Manager
+     -Start Methods for JSON and Image Downloads
+     *****************************************************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,10 +139,15 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         mCoffeeReceiverPendingIntent = PendingIntent.getBroadcast(
                 this, 0, mCoffeeAlarmReceiverIntent, 0);
 
-        // Perform network update, load
+        // Perform network update, download images required,
+        // load spinners
         checkUpdates();
     }
 
+    /*****************************************************************************************
+     OpenBrewer()
+     Opens a new activity for the desired hot or cold brewer
+     *****************************************************************************************/
     private void OpenBrewer(int position) {
 
         Log.d(MTAG,"Trying to set an image");
@@ -142,6 +156,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         startActivity(intent);
     }
 
+    /****************************************************************************************
+     checkUpdates()
+     Method handles calls related to downloads
+     -Displays download dialog
+     -Executes the GetHttp interface that downloads the JSON Data from web service
+     ***************************************************************************************/
     private void checkUpdates()
     {
         showProgressFrag("Checking For Updates...");
@@ -151,6 +171,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         getHttp.execute();
     }
 
+    /***************************************************************************************
+     onGetHttpSuccess()
+     Method called after Async Task for download is done
+     -Processes JSON data
+     -Dismisses Dialog
+     -Checks for photos to download
+     **************************************************************************************/
     @Override
     public void onGetHttpSuccess(String results) {
         AllUpdates(results);
@@ -158,6 +185,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         ManagePhotoDownloads();
     }
 
+    /**************************************************************************************
+     AllUpdates()
+     De-serializes JSON Array into JSON objects
+     Then creates Brewer Objects for the JSON objects
+     Finally, calls the Spinner Loading Methods
+     *************************************************************************************/
     private void AllUpdates(String results)
     {
         try {
@@ -176,13 +209,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
                 brewer.setHowItWorks(jsonObject.getString("howItWorks"));
                 brewer.setHistory(jsonObject.getString("history"));
                 brewer.setSteps(jsonObject.getString("steps"));
-                brewer.setImagePayload(jsonObject.getString("imagePayload").getBytes());
-                brewer.convertImage();
+
                 if (brewer.getTemp() == 1)
                     hotBrewers.add(brewer);
                 else
                     coldBrewers.add(brewer);
             }
+            //Load Spinners
             LoadHotTempSpinner();
             LoadColdTempSpinner();
         }
@@ -192,20 +225,25 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         }
     }
 
-
-
-
+    /***********************************************************************************
+     ManagePhotoDownloads()
+     Connects to the storage directory and reads the files loaded
+     Calls DownloadPicTask on all missing pics
+     **********************************************************************************/
     private void ManagePhotoDownloads() {
         int i = 0;
         int b = hotBrewers.size()+coldBrewers.size();
+        //Connect to the file directory
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         File[] filelist = null;
+
         //get listing of all picture files
         if (storageDir.isDirectory() && storageDir.exists()) {
             filelist = storageDir.listFiles();
         }
 
+        //Check if each file has been downloaded already
         for (int q = 0; q < b; q++)
         {
             Log.d(MTAG,"Q:"+q);
@@ -222,19 +260,33 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
 
     }
 
+    /****************************************************************************************
+     LoadHotTempSpinner()
+     Loads Hot temp Brewer List into the spinner
+     ***************************************************************************************/
     private void LoadHotTempSpinner()
     {
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,hotBrewers);
+        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>
+                (this,android.R.layout.simple_spinner_dropdown_item,hotBrewers);
         hotSpinner.setAdapter(arrayAdapter);
     }
 
+    /****************************************************************************************
+     LoadColdTempSpinner()
+     Loads Cold temp Brewer List into the spinner
+     ***************************************************************************************/
     private void LoadColdTempSpinner()
     {
 
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,coldBrewers);
+        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>
+                (this,android.R.layout.simple_spinner_dropdown_item,coldBrewers);
         coldSpinner.setAdapter(arrayAdapter);
     }
 
+    /****************************************************************************************
+     onCreateOptionsMenu()
+     Inflates Menu
+     ***************************************************************************************/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -242,6 +294,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         return true;
     }
 
+    /****************************************************************************************
+     onOptionsItemSelected()
+     Alarm Button Opens dialog to set an alarm
+     ***************************************************************************************/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -250,12 +306,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         switch (item.getItemId())
         {
             case R.id.menu_top:
-                Intent intent = new Intent(this,TabbedBrewer.class);
 
-                // Launch the Activity using the intent
-                startActivity(intent);
                 break;
             case R.id.menu_alarm:
+                //TODO Launch Dialog Activity
                 // Set single alarm
                 mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
                         System.currentTimeMillis() + FIVE_MIN_ALARM_DELAY,
@@ -267,6 +321,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         return false;
     }
 
+    /****************************************************************************************
+     showProgressFrag()
+     Launches a dialog fragment
+     ***************************************************************************************/
     private void showProgressFrag(String text)
     {
         DialogFragment dialogFragment = new ProcessFragActivity();
@@ -276,27 +334,41 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         dialogFragment.show(getFragmentManager(), "progressFrag");
     }
 
+    /****************************************************************************************
+     DismissProgressFrag()
+     Dismisses a dialog fragment
+     ***************************************************************************************/
     private void DismissProgressFrag()
     {
         FragmentManager fragmentManager = getFragmentManager();
-        DialogFragment dialogFragment = (DialogFragment)fragmentManager.findFragmentByTag("progressFrag");
+        DialogFragment dialogFragment =
+                (DialogFragment)fragmentManager.findFragmentByTag("progressFrag");
         if (dialogFragment != null)
             dialogFragment.dismiss();
     }
 
+}// End - MainActivity Class
 
 
-}
-
+/****************************************************************************************
+ DownloadPicTask Class
+ Class Hosts an Async Task used to download images from the web service
+ ***************************************************************************************/
 class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
 
-
+    /****************************************************************************************
+     doInBackground()
+     Define filename
+     connect to pictures dictionary
+     open file stream and download bitmap
+     ***************************************************************************************/
     @Override
     protected Void doInBackground(Integer... Pos) {
         // Create an image file name
         int position = Pos[0];
         String imageFileName = "/PNG_BREWER_" + position;
-        String sourceFileName = "http://www.sanclementedev.org/Love2Brew/Content/images/image"+position+".png";
+        String sourceFileName =
+                "http://www.sanclementedev.org/Love2Brew/Content/images/image"+position+".png";
         Log.d("FILE", "Find Directory");
         Log.d("FILE", sourceFileName);
         //Find public pictures directory
@@ -351,9 +423,4 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
         return null;
     }
 
-    protected void onPostExecute() {
-        // check this.exception
-        // do something with the feed
-        Log.d("AAA", "Finished?!");
-    }
-}
+}//end - DownloadPicTask Class

@@ -11,8 +11,21 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 /**
- * Created by Sean on 11/24/2014.
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 10/19/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
  */
+
+/**********************************************************************************************
+ GetHttp Async Class
+ Defines IGetHttpListener interface to download JSON data of coffee brewers from web service
+ Connects a HTTP Url connect to the web server and performs a GET
+ Uses a string buffer to receive JSON Array
+ ***********************************************************************************************/
 public class GetHttp extends AsyncTask<Void, Void, String> {
     public interface IGetHttpListener {
         public void onGetHttpSuccess(String results);
