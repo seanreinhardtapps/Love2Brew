@@ -36,7 +36,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    Main activity of Love2Brew App
+    Implements GetHttp.IGetHttpListener to download JSON data of coffee brewers from web service
+    Loads and displays spinners to select from hot or cold coffee brewers
+    Selection of spinner opens another activity to display all information related to selection
+    Menu bar contains button open dialog box for alarm
+    Alarm dialog box allows user to register an alarm for a reminder
 
+ */
 public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     ImageView img;
     Spinner hotSpinner;
@@ -45,7 +53,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     public List<Brewer> coldBrewers = new ArrayList<Brewer>();
 
     File photoFile;
-    AlarmManager mSelfieAlarmManager;
+    AlarmManager mCoffeeAlarmManager;
     private PendingIntent mCoffeeReceiverPendingIntent;
     private String mCurrentPhotoPath;
 
@@ -69,34 +77,20 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // UI Objects
         hotSpinner = (Spinner) findViewById(R.id.spnHot);
         coldSpinner = (Spinner) findViewById(R.id.spnCold);
-         img = (ImageView)findViewById(R.id.img);
+        img = (ImageView)findViewById(R.id.img);
 
+        // Register Event listeners for Hot Brewer Spinner
         hotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean init_hotSpinner = false;
+            // Prevent selection upon loading with init_hotSpinner boolean
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-               /* try {
-                    //createImageFile(position);
-                } catch (IOException ex) {
-                    // Error occurred while creating the File
-                    Log.d(MTAG, "Error in image file creation");
-                }*/
-                new DownloadPicTask().execute(position);
-
-                //OpenBrewer(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //no action
-            }
-        });
-
-        coldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (!init_hotSpinner)
+                init_hotSpinner = true;
+            else
                 OpenBrewer(position);
             }
 
@@ -106,22 +100,37 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
             }
         });
 
+        // Register Event listeners for Hot Brewer Spinner
+        coldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean init_coldSpinner = false;
+            // Prevent selection upon loading with init_hotSpinner boolean
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!init_coldSpinner)
+                    init_coldSpinner = true;
+                else
+                    OpenBrewer(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //no action
+            }
+        });
+
+        // Prepare the alarm service intents
 
         // Get the AlarmManager Service
-        mSelfieAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        // Create an Intent to broadcast to the SelfieAlarmReciever
-        Intent mSelfieAlarmReceiverIntent = new Intent(this,
+        mCoffeeAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        // Create an Intent to broadcast to the AlarmReciever
+        Intent mCoffeeAlarmReceiverIntent = new Intent(this,
                 AlarmNotificationReceiver.class);
 
-        // Create an PendingIntent that holds the SelfieReceiverIntent
+        // Create an PendingIntent that holds the ReceiverIntent
         mCoffeeReceiverPendingIntent = PendingIntent.getBroadcast(
-                this, 0, mSelfieAlarmReceiverIntent, 0);
+                this, 0, mCoffeeAlarmReceiverIntent, 0);
 
-        // Set single alarm
-        mSelfieAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + FIVE_MIN_ALARM_DELAY,
-                mCoffeeReceiverPendingIntent);
-
+        // Perform network update, load
         checkUpdates();
     }
 
@@ -133,19 +142,6 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         startActivity(intent);
     }
 
-    private void LoadHotTempSpinner()
-    {
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,hotBrewers);
-        hotSpinner.setAdapter(arrayAdapter);
-    }
-
-    private void LoadColdTempSpinner()
-    {
-
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,coldBrewers);
-        coldSpinner.setAdapter(arrayAdapter);
-    }
-
     private void checkUpdates()
     {
         showProgressFrag("Checking For Updates...");
@@ -155,51 +151,11 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         getHttp.execute();
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId())
-        {
-            case R.id.menu_top:
-                Intent intent = new Intent(this,TabbedBrewer.class);
-
-                // Launch the Activity using the intent
-                startActivity(intent);
-                break;
-            case R.id.menu_alarm:
-
-                break;
-            default:
-                break;
-        }
-        return false;
-    }
-
-    private void showProgressFrag(String text)
-    {
-        DialogFragment dialogFragment = new ProcessFragActivity();
-        Bundle bundle = new Bundle();
-        bundle.putString("msg",text);
-        dialogFragment.setArguments(bundle);
-        dialogFragment.show(getFragmentManager(), "progressFrag");
-    }
-
-    private void DismissProgressFrag()
-    {
-        FragmentManager fragmentManager = getFragmentManager();
-        DialogFragment dialogFragment = (DialogFragment)fragmentManager.findFragmentByTag("progressFrag");
-        if (dialogFragment != null)
-            dialogFragment.dismiss();
+    public void onGetHttpSuccess(String results) {
+        AllUpdates(results);
+        DismissProgressFrag();
+        ManagePhotoDownloads();
     }
 
     private void AllUpdates(String results)
@@ -237,59 +193,98 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     }
 
 
+
+
+    private void ManagePhotoDownloads() {
+        int i = 0;
+        int b = hotBrewers.size()+coldBrewers.size();
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File[] filelist = null;
+        //get listing of all picture files
+        if (storageDir.isDirectory() && storageDir.exists()) {
+            filelist = storageDir.listFiles();
+        }
+
+        for (int q = 0; q < b; q++)
+        {
+            Log.d(MTAG,"Q:"+q);
+            Log.d(MTAG,"HI "+filelist[i].getName());
+            if (filelist[i].getName().equals("PNG_BREWER_" + q + ".png"))
+            {
+                i++;
+            }
+            else
+            {
+                new DownloadPicTask().execute(q+1);
+            }
+        }
+
+    }
+
+    private void LoadHotTempSpinner()
+    {
+        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,hotBrewers);
+        hotSpinner.setAdapter(arrayAdapter);
+    }
+
+    private void LoadColdTempSpinner()
+    {
+
+        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>(this,android.R.layout.simple_spinner_dropdown_item,coldBrewers);
+        coldSpinner.setAdapter(arrayAdapter);
+    }
+
     @Override
-    public void onGetHttpSuccess(String results) {
-        AllUpdates(results);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId())
+        {
+            case R.id.menu_top:
+                Intent intent = new Intent(this,TabbedBrewer.class);
+
+                // Launch the Activity using the intent
+                startActivity(intent);
+                break;
+            case R.id.menu_alarm:
+                // Set single alarm
+                mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + FIVE_MIN_ALARM_DELAY,
+                        mCoffeeReceiverPendingIntent);
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void showProgressFrag(String text)
+    {
+        DialogFragment dialogFragment = new ProcessFragActivity();
+        Bundle bundle = new Bundle();
+        bundle.putString("msg",text);
+        dialogFragment.setArguments(bundle);
+        dialogFragment.show(getFragmentManager(), "progressFrag");
+    }
+
+    private void DismissProgressFrag()
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+        DialogFragment dialogFragment = (DialogFragment)fragmentManager.findFragmentByTag("progressFrag");
+        if (dialogFragment != null)
+            dialogFragment.dismiss();
     }
 
 
-   // private File createImageFile(int position) throws IOException {
-
-
-        /*FileOutputStream fos = new FileOutputStream(file);
-        write your byteArray here
-                fos.write(brewer.getImagePayload());
-                fos.flush();
-                fos.close();*/
-
-        /*FileOutputStream fOut = new FileOutputStream(file);
-        //Bitmap bmp = BitmapFactory.decodeByteArray(brewer.getImagePayload(), 0, brewer.getImagePayload().length);
-        ByteArrayInputStream byt = new ByteArrayInputStream(brewer.getImagePayload());
-        Bitmap bmp=BitmapFactory.decodeStream(byt);
-        if (bmp == null)
-            Log.d("AAA", "Null bitmap");
-        else {
-            bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            fOut.flush();
-            fOut.close();
-
-        }
-        */
-
-       /* try {
-            InputStream is = (InputStream) new URL("http://www.sanclementedev.org/Love2Brew/Content/images/image1.png").getContent();
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-
-        } catch (Exception e) {
-            Log.d("AAA", "Did not connect");
-            return null;
-        }
-        if (bmp == null)
-            Log.d("AAA", "Null bitmap");
-        else {
-            Log.d("AAA", "Good bitmap");
-
-            bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
-            fos.flush();
-            fos.close();
-        }*/
-
-
-
-
-        //return file;
-    //}
 
 }
 
@@ -297,12 +292,13 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
 
 
     @Override
-    protected Void doInBackground(Integer... position) {
+    protected Void doInBackground(Integer... Pos) {
         // Create an image file name
-
-        String imageFileName = "/PNG_BREWERf_" + position;
+        int position = Pos[0];
+        String imageFileName = "/PNG_BREWER_" + position;
+        String sourceFileName = "http://www.sanclementedev.org/Love2Brew/Content/images/image"+position+".png";
         Log.d("FILE", "Find Directory");
-
+        Log.d("FILE", sourceFileName);
         //Find public pictures directory
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
@@ -314,11 +310,7 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES) + imageFileName + ".png");
 
-
-       // Brewer brewer = MainActivity.hotBrewers.get(position);
-
-
-
+        //Declare bitmap and FileStream
         Bitmap bmp;
         FileOutputStream fos = null;
         try {
@@ -327,8 +319,9 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
             e.printStackTrace();
         }
 
+        // Begin download of image
         try {
-            java.net.URL url = new java.net.URL("http://www.sanclementedev.org/Love2Brew/Content/images/image1.png");
+            java.net.URL url = new java.net.URL(sourceFileName);
             HttpURLConnection connection = (HttpURLConnection) url
                     .openConnection();
             connection.setDoInput(true);
