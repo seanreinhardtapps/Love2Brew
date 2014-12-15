@@ -72,6 +72,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     public static final String MTAG = "Main Activity";
     public static final String ATAG = "Alarm Activity";
 
+    //Hot and cold Brewer Control Tags
+    public static final int HOT_BREWER_TAG = 101;
+    public static final int COLD_BREWER_TAG = 102;
+
     //Server Location
     public final String SERVER = "http://www.sanclementedev.org/Love2Brew/api/CoffeeBrewers/";
 
@@ -100,13 +104,15 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
             if (!init_hotSpinner)
                 init_hotSpinner = true;
             else
-                OpenBrewer(position);
+                OpenBrewer(position,HOT_BREWER_TAG);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //no action
                 //TODO Might fix problem with clicking first item in spinner here
+                Log.d("SPINNER","Spin:"+hotSpinner.getSelectedItemPosition());
+                OpenBrewer(hotSpinner.getSelectedItemPosition(),HOT_BREWER_TAG);
             }
         });
 
@@ -119,7 +125,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 if (!init_coldSpinner)
                     init_coldSpinner = true;
                 else
-                    OpenBrewer(position);
+                    OpenBrewer(position,COLD_BREWER_TAG);
             }
 
             @Override
@@ -149,13 +155,19 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
      OpenBrewer()
      Opens a new activity for the desired hot or cold brewer
      *****************************************************************************************/
-    private void OpenBrewer(int position) {
-
+    private void OpenBrewer(int position, int tag) {
         Log.d(MTAG,"Trying to set an image");
+        // Get brewer, Collect from hot or cold list based on selection
+        Brewer b;
+        if (tag==HOT_BREWER_TAG)
+            b = hotBrewers.get(position);
+        else
+            b = coldBrewers.get(position);
+
+        //Prepare intent and load with data
         Intent intent = new Intent(this,TabView.class);
         // Bundle neeeded for extras
         Bundle bund = new Bundle();
-        Brewer b = hotBrewers.get(position);
         bund.putString("BName",b.getName());
         bund.putString("BOverview",b.getOverview());
         bund.putString("BHistory",b.getHistory());
@@ -226,6 +238,8 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 else
                     coldBrewers.add(brewer);
             }
+            hotBrewers.add(0,new Brewer());
+            coldBrewers.add(0,new Brewer());
             //Load Spinners
             LoadHotTempSpinner();
             LoadColdTempSpinner();
