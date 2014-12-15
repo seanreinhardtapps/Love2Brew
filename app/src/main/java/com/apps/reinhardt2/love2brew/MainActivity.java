@@ -52,7 +52,7 @@ import java.util.List;
     Alarm dialog box allows user to register an alarm for a reminder
 
  ***********************************************************************************************/
-public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
+public class MainActivity extends Activity implements GetHttp.IGetHttpListener, DialogClickListener{
     public static PendingIntent mCoffeeReceiverPendingIntent;
     Spinner hotSpinner;
     Spinner coldSpinner;
@@ -106,6 +106,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //no action
+                //TODO Might fix problem with clicking first item in spinner here
             }
         });
 
@@ -151,8 +152,18 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
     private void OpenBrewer(int position) {
 
         Log.d(MTAG,"Trying to set an image");
-        Intent intent = new Intent(this,TabbedBrewer.class);
-        intent.putExtra("Brewer", position);
+        Intent intent = new Intent(this,TabView.class);
+        // Bundle neeeded for extras
+        Bundle bund = new Bundle();
+        Brewer b = hotBrewers.get(position);
+        bund.putString("BName",b.getName());
+        bund.putString("BOverview",b.getOverview());
+        bund.putString("BHistory",b.getHistory());
+        bund.putString("BHowWorks",b.getHowItWorks());
+        bund.putString("BSteps",b.getSteps());
+        bund.putString("BFile",b.getImageLocation());
+        // load extras to intent and start tabs
+        intent.putExtras(bund);
         startActivity(intent);
     }
 
@@ -353,6 +364,10 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener{
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onYesClick() {
+        PopToast("HI");
+    }
 }// End - MainActivity Class
 
 
@@ -378,6 +393,7 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
         Log.d("FILE", "Find Directory");
         Log.d("FILE", sourceFileName);
         //Find public pictures directory
+        //TODO Change Directory to private app directory
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         Log.d(MainActivity.MTAG, "Directory: " + storageDir);
@@ -430,3 +446,12 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
     }
 
 }//end - DownloadPicTask Class
+
+
+/****************************************************************************************
+ DialogClickListener
+ Callback interface for DialogFragments
+ ***************************************************************************************/
+interface DialogClickListener {
+    public void onYesClick();
+}

@@ -23,7 +23,7 @@ import android.os.Bundle;
 public class AlertDialogFrag extends DialogFragment {
     String mTitle = "";
     String mMessage = "";
-
+    private DialogClickListener callback;
     public void setTitle(String title) {
         this.mTitle = title;
     }
@@ -38,6 +38,8 @@ public class AlertDialogFrag extends DialogFragment {
      *******************************************************************************************/
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        callback = (DialogClickListener) getTargetFragment();
+        callback.onYesClick();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
                 .setTitle(mTitle)
@@ -52,3 +54,5 @@ public class AlertDialogFrag extends DialogFragment {
     }// end - onCreateDialog
 
 }//end - AlertDialogFrag Class
+
+

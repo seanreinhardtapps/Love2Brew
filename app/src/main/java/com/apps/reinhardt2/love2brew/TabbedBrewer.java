@@ -18,21 +18,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+/**
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 12/5/2014.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2014
+ */
 
+/**********************************************************************************************
+ Tabbed Activity of Love2Brew App
+ Receives Brewer from Main Activity
+ Displays 4 tabs:
+    -Overview (with photo)
+    -History
+    -How it works
+    -Steps
+ Menu bar contains button open dialog box for alarm
+ Alarm dialog box allows user to register an alarm for a reminder
 
+ ***********************************************************************************************/
 public class TabbedBrewer extends FragmentActivity {
     //Tag Constants for log calls
     public static final String TTAG = "Tabbed Activity";
 
     SectionsPagerAdapter mSectionsPagerAdapter;
-
+    Brewer mBrewer;
     ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_brewer);
-
+        final ActionBar actionBar = getActionBar();
 
         // Create the adapter that will return a fragment for each of the four
         // primary sections of the activity.
@@ -41,6 +61,33 @@ public class TabbedBrewer extends FragmentActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        // Specify that tabs should be displayed in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // show the given tab
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+
+        // Add 4 tabs, specifying the tab's text and TabListener
+        for (int i = 0; i < 4; i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText("Tab " + (i + 1))
+                            .setTabListener(tabListener));
+        }
+
 
     }
 
@@ -74,12 +121,19 @@ public class TabbedBrewer extends FragmentActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
+        private static final String ARG_SECTION_NUMBER = "section_number";
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            //return PlaceholderFragment.newInstance(position + 1);
+            Fragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            // Our object is just an integer :-P
+            args.putInt(ARG_SECTION_NUMBER, position + 1);
+            fragment.setArguments(args);
+            return fragment;
+
         }
 
         @Override
@@ -109,23 +163,7 @@ public class TabbedBrewer extends FragmentActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
 
         public PlaceholderFragment() {
         }
@@ -136,6 +174,7 @@ public class TabbedBrewer extends FragmentActivity {
             View rootView = inflater.inflate(R.layout.activity_tabbed_brewer, container, false);
             return rootView;
         }
+
     }
 
 }

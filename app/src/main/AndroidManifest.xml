@@ -21,8 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.apps.reinhardt2.love2brew.TabbedBrewer"
-            android:label="@string/title_activity_tabbed_brewer" >
+        android:name="com.apps.reinhardt2.love2brew.TabbedBrewer"
+        android:label="@string/title_activity_tabbed_brewer" >
+    </activity>
+        <activity
+            android:name="com.apps.reinhardt2.love2brew.TabView"
+            android:label="@string/title_activity_tabview" >
         </activity>
         <receiver android:name=".AlarmNotificationReceiver"> </receiver>
     </application>
