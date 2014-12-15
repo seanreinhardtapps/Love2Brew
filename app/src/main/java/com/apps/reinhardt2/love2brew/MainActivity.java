@@ -364,9 +364,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
+    /****************************************************************************************
+     onYesClick() Callback method from AlarmDialogFrag to call PopToast
+     ***************************************************************************************/
     @Override
     public void onYesClick() {
-        PopToast("HI");
+        PopToast("Reminder Set");
     }
 }// End - MainActivity Class
 

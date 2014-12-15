@@ -21,8 +21,8 @@ public class TabFrag2 extends Fragment {
 
         View rootView = inflater.inflate(R.layout.act_tabbed_brewer2,container,false);
 
-        TextView txtView1 = (TextView)rootView.findViewById(R.id.text2_1);
-        TextView txtView2 = (TextView)rootView.findViewById(R.id.text2_2);
+        TextView txtView1 = (TextView)rootView.findViewById(R.id.text2_2);
+        TextView txtView2 = (TextView)rootView.findViewById(R.id.text2_4);
 
         if (getArguments().containsKey("Data"))
         {

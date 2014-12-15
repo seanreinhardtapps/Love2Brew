@@ -1,7 +1,11 @@
 package com.apps.reinhardt2.love2brew;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 
 /**
  * Created by Sean on 11/8/2014.
@@ -33,7 +39,12 @@ public class TabFrag1 extends Fragment {
             data = getArguments().getStringArray("Data");
         }
 
-        Log.d("TAB1", "Name:" + data[0]);
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES) +"/"+ data[2] + ".png");
+        Bitmap img = BitmapFactory.decodeFile(file.getAbsolutePath());
+        imgView.setImageBitmap(img);
+        Log.d("TAB1", "File:" + data[2]);
+        Log.d("Tab1","Bit:"+file.getAbsolutePath());
         txtView1.setText(data[0]);
         txtView2.setText(data[1]);
 
