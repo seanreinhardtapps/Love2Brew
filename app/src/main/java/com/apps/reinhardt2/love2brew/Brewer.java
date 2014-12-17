@@ -1,11 +1,5 @@
 package com.apps.reinhardt2.love2brew;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
 
 /**
  * SEANREINHARDTAPPS

@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +59,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     Spinner coldSpinner;
     public List<Brewer> hotBrewers = new ArrayList<Brewer>();
     public List<Brewer> coldBrewers = new ArrayList<Brewer>();
-
+    public Context mContext;
     static AlarmManager mCoffeeAlarmManager;
     //public PendingIntent mCoffeeReceiverPendingIntent;
 
@@ -90,7 +91,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mContext = getBaseContext();
         // UI Objects
         hotSpinner = (Spinner) findViewById(R.id.spnHot);
         coldSpinner = (Spinner) findViewById(R.id.spnCold);
@@ -110,7 +111,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //no action
-                //TODO Might fix problem with clicking first item in spinner here
+
                 Log.d("SPINNER","Spin:"+hotSpinner.getSelectedItemPosition());
                 OpenBrewer(hotSpinner.getSelectedItemPosition(),HOT_BREWER_TAG);
             }
@@ -135,10 +136,9 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         });
 
         // Prepare the alarm service intents
-
         // Get the AlarmManager Service
         mCoffeeAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        // Create an Intent to broadcast to the AlarmReciever
+        // Create an Intent to broadcast to the AlarmReceiver
         Intent mCoffeeAlarmReceiverIntent = new Intent(this,
                 AlarmNotificationReceiver.class);
 
@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
 
         //Prepare intent and load with data
         Intent intent = new Intent(this,TabView.class);
-        // Bundle neeeded for extras
+        // Bundle needed for extras
         Bundle bund = new Bundle();
         bund.putString("BName",b.getName());
         bund.putString("BOverview",b.getOverview());
@@ -238,8 +238,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 else
                     coldBrewers.add(brewer);
             }
-            hotBrewers.add(0,new Brewer());
-            coldBrewers.add(0,new Brewer());
+
             //Load Spinners
             LoadHotTempSpinner();
             LoadColdTempSpinner();
@@ -258,9 +257,11 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     private void ManagePhotoDownloads() {
         int i = 0;
         int b = hotBrewers.size()+coldBrewers.size();
-        //Connect to the file directory
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        String imagePath = "/Love2BrewData";
+        File sdCard = Environment.getExternalStorageDirectory();
+        File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
+        //Race Condition - ensure directory exists
+        storageDir.mkdirs();
         File[] filelist = null;
 
         //get listing of all picture files
@@ -269,20 +270,21 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         }
 
         //Check if each file has been downloaded already
-        for (int q = 0; q < b; q++)
-        {
-            Log.d(MTAG,"Q:"+q);
-            Log.d(MTAG,"HI "+filelist[i].getName());
-            if (filelist[i].getName().equals("PNG_BREWER_" + q + ".png"))
-            {
-                i++;
-            }
-            else
-            {
-                new DownloadPicTask().execute(q+1);
+        if (filelist == null || filelist.length > 0) {
+            for (int q = 0; q < b; q++) {
+
+                //Log.d(MTAG,"HI "+filelist[i].getName());
+                if (filelist[i].getName().equals("PNG_BREWER_" + q + ".png")) {
+                    i++;
+                } else {
+                    new DownloadPicTask().execute(q + 1);
+                }
             }
         }
-
+        //First time files are loaded
+        else
+            for (int h=0; h < b; h++)
+                new DownloadPicTask().execute(h + 1);
     }
 
     /****************************************************************************************
@@ -334,6 +336,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
 
                 break;
             case R.id.menu_alarm:
+                //Launch Alarm Dialog Fragment
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 AlarmDialogFrag newFragment = new AlarmDialogFrag();
                 newFragment.show(ft,"Alarm");
@@ -404,22 +407,17 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
     protected Void doInBackground(Integer... Pos) {
         // Create an image file name
         int position = Pos[0];
-        String imageFileName = "/PNG_BREWER_" + position;
+        String imagePath = "/Love2BrewData";
+        String imageFileName = "PNG_BREWER_" + position;
         String sourceFileName =
                 "http://www.sanclementedev.org/Love2Brew/Content/images/image"+position+".png";
-        Log.d("FILE", "Find Directory");
-        Log.d("FILE", sourceFileName);
-        //Find public pictures directory
-        //TODO Change Directory to private app directory
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        Log.d(MainActivity.MTAG, "Directory: " + storageDir);
-
-        //Call in case directory is missing - - not normally needed
+        //Establish File Directory
+        File sdCard = Environment.getExternalStorageDirectory();
+        File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
         storageDir.mkdirs();
-
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES) + imageFileName + ".png");
+        Log.d(MainActivity.MTAG, "Directory: " + storageDir);
+        //Create new file for image
+        File file = new File(storageDir, imageFileName + ".png");
 
         //Declare bitmap and FileStream
         Bitmap bmp;

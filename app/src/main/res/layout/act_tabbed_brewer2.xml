@@ -19,6 +19,10 @@
         android:layout_width="match_parent"
         android:id="@+id/text2_2"/>
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "/>
+    <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/howworks"
