@@ -15,7 +15,7 @@ import android.view.MenuItem;
  * Java Android Application
  * This file is a module in the application:
  * Project host at https://www.github.com/SeanReinhardtApps/
- * <p/>
+ *
  * 2014
  */
 public class TabView extends Activity {

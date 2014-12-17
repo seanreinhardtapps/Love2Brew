@@ -238,7 +238,6 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 else
                     coldBrewers.add(brewer);
             }
-
             //Load Spinners
             LoadHotTempSpinner();
             LoadColdTempSpinner();
@@ -333,7 +332,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         switch (item.getItemId())
         {
             case R.id.menu_top:
-
+                //already at main menu
                 break;
             case R.id.menu_alarm:
                 //Launch Alarm Dialog Fragment

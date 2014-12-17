@@ -23,7 +23,7 @@ import android.util.Log;
  */
 
 /**********************************************************************************************
- AlarmnitificationReceiver
+ AlarmNotificationReceiver
  Sets up the intent that will execute when the AlarmReciever is triggered by the system
  Publishes a notification to the notification center
  ***********************************************************************************************/
@@ -59,7 +59,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 		// Build the Notification
 		Notification.Builder notificationBuilder = new Notification.Builder(
 				context)
-                .setSmallIcon(android.R.drawable.ic_menu_camera)
+                .setSmallIcon(R.drawable.ic_menu_recent_history)
 				.setAutoCancel(true)
                 .setContentTitle(contentTitle)
 				.setContentText(contentText)

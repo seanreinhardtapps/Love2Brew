@@ -8,20 +8,21 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_column="0"
-        android:layout_row="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:text="Select a Coffee Brewing Technique to Learn About"
+        android:text="@string/select"
         android:textSize="24sp"
         android:layout_gravity="center"
         android:textColor="#ddaa3508"
-        android:typeface="normal"
         android:textStyle="bold" />
+
     <TextView android:text="@string/hotcoffee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="#ddaa3508" />
+
     <Spinner
         android:id="@+id/spnHot"
         android:layout_gravity="fill_horizontal"/>
@@ -31,9 +32,9 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="#ddaa3508" />
+
     <Spinner
         android:id="@+id/spnCold"
         android:layout_gravity="fill_horizontal"/>
-
 
 </GridLayout>

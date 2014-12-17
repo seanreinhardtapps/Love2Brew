@@ -20,5 +20,6 @@
     <string name="howworks">How it Works</string>
     <string name="steps">Steps</string>
     <string name="overview">Overview</string>
+    <string name="select">Select a Coffee Brewing Technique to Learn About</string>
 
 </resources>
