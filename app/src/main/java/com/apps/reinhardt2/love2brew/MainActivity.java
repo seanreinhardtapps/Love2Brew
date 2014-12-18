@@ -158,25 +158,28 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     private void OpenBrewer(int position, int tag) {
         Log.d(MTAG,"Trying to set an image");
         // Get brewer, Collect from hot or cold list based on selection
-        Brewer b;
-        if (tag==HOT_BREWER_TAG)
-            b = hotBrewers.get(position);
-        else
-            b = coldBrewers.get(position);
+        //if position == 0, then it's the selection text, not a real brewer
+        if (position != 0) {
+            Brewer b;
+            if (tag == HOT_BREWER_TAG)
+                b = hotBrewers.get(position);
+            else
+                b = coldBrewers.get(position);
 
-        //Prepare intent and load with data
-        Intent intent = new Intent(this,TabView.class);
-        // Bundle needed for extras
-        Bundle bund = new Bundle();
-        bund.putString("BName",b.getName());
-        bund.putString("BOverview",b.getOverview());
-        bund.putString("BHistory",b.getHistory());
-        bund.putString("BHowWorks",b.getHowItWorks());
-        bund.putString("BSteps",b.getSteps());
-        bund.putString("BFile",b.getImageLocation());
-        // load extras to intent and start tabs
-        intent.putExtras(bund);
-        startActivity(intent);
+            //Prepare intent and load with data
+            Intent intent = new Intent(this, TabView.class);
+            // Bundle needed for extras
+            Bundle bund = new Bundle();
+            bund.putString("BName", b.getName());
+            bund.putString("BOverview", b.getOverview());
+            bund.putString("BHistory", b.getHistory());
+            bund.putString("BHowWorks", b.getHowItWorks());
+            bund.putString("BSteps", b.getSteps());
+            bund.putString("BFile", b.getImageLocation());
+            // load extras to intent and start tabs
+            intent.putExtras(bund);
+            startActivity(intent);
+        }
     }
 
     /****************************************************************************************
@@ -238,6 +241,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 else
                     coldBrewers.add(brewer);
             }
+            // Add empty spinner items:
+            Brewer empty = new Brewer();
+            empty.setId(-1);
+            empty.setName("--Select a Coffee Brewer--");
+            hotBrewers.add(0,empty);
+            coldBrewers.add(0,empty);
+
             //Load Spinners
             LoadHotTempSpinner();
             LoadColdTempSpinner();
@@ -255,7 +265,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
      **********************************************************************************/
     private void ManagePhotoDownloads() {
         int i = 0;
-        int b = hotBrewers.size()+coldBrewers.size();
+        int b = hotBrewers.size()+coldBrewers.size()-2;
         String imagePath = "/Love2BrewData";
         File sdCard = Environment.getExternalStorageDirectory();
         File storageDir = new File(sdCard.getAbsolutePath()+imagePath);

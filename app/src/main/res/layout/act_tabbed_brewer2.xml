@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="@drawable/brewbkg22">
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="140dp">
     <TextView
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:text="@string/history"
     android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="#ddaa3508"
     android:textSize="20sp"
     android:id="@+id/text2_1"
         android:gravity="center_horizontal" />
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+
+        android:textColor="#ddaa3508"
         android:id="@+id/text2_2"/>
     <TextView
         android:layout_width="wrap_content"
@@ -28,11 +34,15 @@
         android:text="@string/howworks"
         android:textAllCaps="true"
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#ddaa3508"
         android:id="@+id/text2_3"
         android:gravity="center_horizontal" />
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+
+        android:textColor="#ddaa3508"
         android:id="@+id/text2_4"/>
 
 

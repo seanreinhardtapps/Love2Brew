@@ -41,6 +41,8 @@ public class AlarmDialogFrag extends DialogFragment {
         Button button3 = (Button)v.findViewById(R.id.button3);
         Button button4 = (Button)v.findViewById(R.id.button4);
 
+        getDialog().setTitle("Coffee Reminders");
+
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +76,7 @@ public class AlarmDialogFrag extends DialogFragment {
                 MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
                         System.currentTimeMillis() + MainActivity.NINETY_SEC_ALARM_DELAY,
                         MainActivity.mCoffeeReceiverPendingIntent);
-                //MainActivity.PopToast("Reminder Set");
+                ((MainActivity)getActivity()).PopToast("Reminder Set");
                 dismiss();
             }
         });
