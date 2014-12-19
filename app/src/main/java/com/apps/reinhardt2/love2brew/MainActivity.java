@@ -339,14 +339,18 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        FragmentTransaction ft;
         switch (item.getItemId())
         {
             case R.id.menu_top:
-                //already at main menu
+                //about dialog
+                ft = getFragmentManager().beginTransaction();
+                AboutFragActivity abtFragment = new AboutFragActivity();
+                abtFragment.show(ft,"Alarm");
                 break;
             case R.id.menu_alarm:
                 //Launch Alarm Dialog Fragment
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft = getFragmentManager().beginTransaction();
                 AlarmDialogFrag newFragment = new AlarmDialogFrag();
                 newFragment.show(ft,"Alarm");
 

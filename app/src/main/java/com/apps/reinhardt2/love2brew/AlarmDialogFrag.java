@@ -76,7 +76,7 @@ public class AlarmDialogFrag extends DialogFragment {
                 MainActivity.mCoffeeAlarmManager.set(AlarmManager.RTC_WAKEUP,
                         System.currentTimeMillis() + MainActivity.NINETY_SEC_ALARM_DELAY,
                         MainActivity.mCoffeeReceiverPendingIntent);
-                ((MainActivity)getActivity()).PopToast("Reminder Set");
+                //((MainActivity)getActivity()).PopToast("Reminder Set");
                 dismiss();
             }
         });

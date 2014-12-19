@@ -76,7 +76,7 @@ public class TabView extends Activity {
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
+            getMenuInflater().inflate(R.menu.menu_tabbed_brewer, menu);
             return true;
         }
 
@@ -89,12 +89,18 @@ public class TabView extends Activity {
             // Handle action bar item clicks here. The action bar will
             // automatically handle clicks on the Home/Up button, so long
             // as you specify a parent activity in AndroidManifest.xml.
+            FragmentTransaction ft;
             switch (item.getItemId()) {
-                case R.id.menu_top:
+                case R.id.menu_mainmt:
                     finish();
                     break;
-                case R.id.menu_alarm:
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                case R.id.menu_aboutt:
+                    ft = getFragmentManager().beginTransaction();
+                    AboutFragActivity abtFragment = new AboutFragActivity();
+                    abtFragment.show(ft,"Alarm");
+                    break;
+                case R.id.menu_alarmt:
+                    ft = getFragmentManager().beginTransaction();
                     AlarmDialogFrag newFragment = new AlarmDialogFrag();
                     newFragment.show(ft, "Alarm");
 
