@@ -2,4 +2,12 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_font_top_land">21sp</dimen>
+    <dimen name="activity_font_sub_land">18sp</dimen>
+    <dimen name="activity_font_top_port">20sp</dimen>
+    <dimen name="activity_font_sub_port">18sp</dimen>
+    <dimen name="activity_font_tab_header_port">26sp</dimen>
+    <dimen name="activity_font_tab_body_port">18sp</dimen>
+    <dimen name="activity_font_tab_header_land">26sp</dimen>
+    <dimen name="activity_font_tab_body_land">18sp</dimen>
 </resources>
