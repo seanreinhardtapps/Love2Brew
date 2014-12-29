@@ -25,7 +25,16 @@ public class Brewer {
         private String howItWorks;
         private String history;
         private String steps;
+        private int rating;
         private String imageLocation;
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     /******************************************************************************************
      Override of toString - Prints name of coffee brewer

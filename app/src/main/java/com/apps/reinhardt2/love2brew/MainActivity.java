@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     public static final int COLD_BREWER_TAG = 102;
 
     //Server Location
-    public final String SERVER = "http://www.sanclementedev.org/Love2Brew/api/CoffeeBrewers/";
+    public final String SERVER = "http://coffee.sreinhardt.com/api/CoffeeBrewers/";
 
     /*****************************************************************************************
      onCreate()
@@ -235,7 +235,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 brewer.setHowItWorks(jsonObject.getString("howItWorks"));
                 brewer.setHistory(jsonObject.getString("history"));
                 brewer.setSteps(jsonObject.getString("steps"));
-
+                brewer.setRating(jsonObject.getInt("rating"));
                 if (brewer.getTemp() == 1)
                     hotBrewers.add(brewer);
                 else
@@ -423,7 +423,7 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
         String imagePath = "/Love2BrewData";
         String imageFileName = "PNG_BREWER_" + position;
         String sourceFileName =
-                "http://www.sanclementedev.org/Love2Brew/Content/images/image"+position+".png";
+                "http://coffee.sreinhardt.com/Content/images/image"+position+".png";
         //Establish File Directory
         File sdCard = Environment.getExternalStorageDirectory();
         File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
