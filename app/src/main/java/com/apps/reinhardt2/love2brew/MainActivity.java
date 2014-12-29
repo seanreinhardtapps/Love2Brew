@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     private SharedPreferences sharedPreferences;
     private String mPrefName = "BrewerData";
     private String sRESULTS = "stored_results";
+    private boolean downloadLock = false;
     //public PendingIntent mCoffeeReceiverPendingIntent;
 
     // Alarm Constants
@@ -152,7 +153,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
 
         // Perform network update, download images required,
         // load spinners
-        checkUpdates();
+            checkUpdates();
 
         //Load Shared Preferences
         //Get JSON String from storage, if exists launch AllUpdates Method to load brewers
