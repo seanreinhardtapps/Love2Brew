@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -61,6 +62,9 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     public List<Brewer> coldBrewers = new ArrayList<Brewer>();
     public Context mContext;
     static AlarmManager mCoffeeAlarmManager;
+    private SharedPreferences sharedPreferences;
+    private String mPrefName = "BrewerData";
+    private String sRESULTS = "stored_results";
     //public PendingIntent mCoffeeReceiverPendingIntent;
 
     // Alarm Constants
@@ -149,6 +153,34 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         // Perform network update, download images required,
         // load spinners
         checkUpdates();
+
+        //Load Shared Preferences
+        //Get JSON String from storage, if exists launch AllUpdates Method to load brewers
+        sharedPreferences = getSharedPreferences(mPrefName,MODE_PRIVATE);
+        String temp_results = sharedPreferences.getString(sRESULTS,"");
+        if (!"".equals(temp_results))
+        {
+            AllUpdates(temp_results);
+        }
+    }
+
+    /****************************************************************************************
+     onResume()
+     Called when app reloads to view
+     -Check for downloaded data
+     -call AllUpdates method to load data
+     ***************************************************************************************/
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Load Shared Preferences
+        //Get JSON String from storage, if exists launch AllUpdates Method to load brewers
+        sharedPreferences = getSharedPreferences(mPrefName,MODE_PRIVATE);
+        String temp_results = sharedPreferences.getString(sRESULTS,"");
+        if (!"".equals(temp_results))
+        {
+            AllUpdates(temp_results);
+        }
     }
 
     /*****************************************************************************************
@@ -222,7 +254,8 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         try {
             // de-serialization occurs in constructor - object is an array
             JSONArray jsonArray = new JSONArray(results);
-
+            hotBrewers.clear();
+            coldBrewers.clear();
             for (int i = 0; i < jsonArray.length();i++)
             {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -256,6 +289,12 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         {
             e.printStackTrace();
         }
+
+        //Store download in SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(sRESULTS,results);
+        editor.apply();
+
     }
 
     /***********************************************************************************
@@ -284,7 +323,9 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
 
                 //Log.d(MTAG,"HI "+filelist[i].getName());
                 if (filelist[i].getName().equals("PNG_BREWER_" + q + ".png")) {
-                    i++;
+                    if (i != filelist.length)
+                        i++;
+
                 } else {
                     new DownloadPicTask().execute(q + 1);
                 }
