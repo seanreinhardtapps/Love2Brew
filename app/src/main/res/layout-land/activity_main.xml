@@ -1,20 +1,30 @@
+<LinearLayout
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bkglandscape2"
+    android:weightSum="1">
+
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/grd"
-    android:columnCount="4"
-    android:background="@drawable/bkglandscape2"
+    android:columnCount="8"
+
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select"
-        android:layout_columnSpan="4"
+        android:layout_columnSpan="8"
         android:textColor="#ddaa3508"
         android:textStyle="bold"
-        android:textSize="@dimen/activity_font_top_land" />
+        android:textSize="@dimen/activity_font_top_land"
+        android:layout_row="0"
+        android:layout_column="0" />
 
     <TextView android:text="@string/hotcoffee"
         android:layout_width="wrap_content"
@@ -50,9 +60,12 @@
         android:layout_width="220dp"
         android:spinnerMode="dialog" />
 
+
+</GridLayout>
     <ImageView
         android:src="@drawable/brewlogo"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        />
-</GridLayout>
+        android:layout_width="@dimen/logo_height"
+        android:layout_height="@dimen/logo_height"
+        android:layout_gravity="end"
+         />
+</LinearLayout>

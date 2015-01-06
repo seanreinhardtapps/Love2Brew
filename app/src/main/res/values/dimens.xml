@@ -10,4 +10,5 @@
     <dimen name="activity_font_tab_body_port">18sp</dimen>
     <dimen name="activity_font_tab_header_land">26sp</dimen>
     <dimen name="activity_font_tab_body_land">18sp</dimen>
+    <dimen name="logo_height">150dp</dimen>
 </resources>
