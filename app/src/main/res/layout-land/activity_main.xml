@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/grd"
     android:columnCount="4"
-    android:background="@drawable/coffeebkg"
+    android:background="@drawable/bkglandscape2"
     tools:context=".MainActivity">
 
     <TextView
@@ -50,4 +50,9 @@
         android:layout_width="220dp"
         android:spinnerMode="dialog" />
 
+    <ImageView
+        android:src="@drawable/brewlogo"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        />
 </GridLayout>

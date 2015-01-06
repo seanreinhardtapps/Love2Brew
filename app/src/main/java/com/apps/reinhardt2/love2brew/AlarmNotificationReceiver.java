@@ -77,8 +77,8 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 				notificationBuilder.build());
 
 		// Log occurence of notify() call
-		Log.i(MainActivity.ATAG, "Sending notification at:"
-				+ DateFormat.getDateTimeInstance().format(new Date()));
+		//Log.i(MainActivity.ATAG, "Sending notification at:"
+		//		+ DateFormat.getDateTimeInstance().format(new Date()));
 
 	}
 }

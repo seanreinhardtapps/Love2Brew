@@ -54,8 +54,8 @@ public class TabFrag1 extends Fragment {
         //Load Bitmap to ImageView
         Bitmap img = BitmapFactory.decodeFile(file.getAbsolutePath());
         imgView.setImageBitmap(img);
-        Log.d("TAB1", "File:" + data[2]);
-        Log.d("Tab1","Bit:"+file.getAbsolutePath());
+        //Log.d("TAB1", "File:" + data[2]);
+        //Log.d("Tab1","Bit:"+file.getAbsolutePath());
         //Load TextViews
         txtView1.setText(data[0]);
         txtView2.setText(data[1]);

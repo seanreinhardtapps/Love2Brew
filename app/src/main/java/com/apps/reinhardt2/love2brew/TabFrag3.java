@@ -35,7 +35,7 @@ public class TabFrag3 extends Fragment {
         if (getArguments().containsKey("Data"))
         {
             data3 = getArguments().getStringArray("Data");
-            Log.d("TAB3", "Steps:" + data3[0]);
+            //Log.d("TAB3", "Steps:" + data3[0]);
             txtView3_1.setText(data3[0]);
         }
         else

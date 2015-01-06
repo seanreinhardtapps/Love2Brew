@@ -117,7 +117,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
             public void onNothingSelected(AdapterView<?> parent) {
                 //no action
 
-                Log.d("SPINNER","Spin:"+hotSpinner.getSelectedItemPosition());
+                //Log.d("SPINNER","Spin:"+hotSpinner.getSelectedItemPosition());
                 OpenBrewer(hotSpinner.getSelectedItemPosition(),HOT_BREWER_TAG);
             }
         });
@@ -189,7 +189,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
      Opens a new activity for the desired hot or cold brewer
      *****************************************************************************************/
     private void OpenBrewer(int position, int tag) {
-        Log.d(MTAG,"Trying to set an image");
+        //Log.d(MTAG,"Trying to set an image");
         // Get brewer, Collect from hot or cold list based on selection
         //if position == 0, then it's the selection text, not a real brewer
         if (position != 0) {
@@ -470,7 +470,7 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
         File sdCard = Environment.getExternalStorageDirectory();
         File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
         storageDir.mkdirs();
-        Log.d(MainActivity.MTAG, "Directory: " + storageDir);
+        //Log.d(MainActivity.MTAG, "Directory: " + storageDir);
         //Create new file for image
         File file = new File(storageDir, imageFileName + ".png");
 
@@ -492,14 +492,14 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
             connection.connect();
             int responseCode = connection.getResponseCode();
             if(responseCode == HttpURLConnection.HTTP_OK) {
-                Log.d("AAA", "Good Connection");
+                //Log.d("AAA", "Good Connection");
                 InputStream input = connection.getInputStream();
                 bmp = BitmapFactory.decodeStream(input);
                 //return myBitmap;
                 if (bmp == null)
                     Log.d("AAA", "Null bitmap");
                 else {
-                    Log.d("AAA", "Good bitmap");
+                    //Log.d("AAA", "Good bitmap");
                     bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
                     assert fos != null;
                     fos.flush();

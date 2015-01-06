@@ -7,7 +7,7 @@
     android:background="@drawable/brewbkg22"
     >
     <ScrollView
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         >
 <LinearLayout
@@ -33,7 +33,12 @@
         android:id="@+id/text3_2"
         android:textSize="@dimen/activity_font_tab_body_port" />
 
-
+    <ImageView
+        android:src="@drawable/brewlogo"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        />
 
 </LinearLayout>
 </ScrollView>
