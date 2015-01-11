@@ -3,6 +3,7 @@ package com.apps.reinhardt2.love2brew;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * SEANREINHARDTAPPS
+ * Created by Sean Reinhardt on 1/10/2015.
+ * Java Android Application
+ * This file is a module in the application: Love2Brew
+ * // This extension of BaseAdapter makes the listView of images
+ * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ *
+ * 2015
+ */
 
-/*
-// SelfieViewAdapter extension of BaseAdapter class
-// This extension of BaseAdapter makes the listView of images
-// Contains a list of PicRecord objects
-*/
+/**********************************************************************************************
+ BrewerViewActivity of Love2Brew App
+ Extension of BaseAdapter that implements a custom ListView
+
+ ***********************************************************************************************/
 public class BrewerViewAdapter extends BaseAdapter {
 
 	private ArrayList<Brewer> list = new ArrayList<Brewer>();
@@ -40,7 +51,13 @@ public class BrewerViewAdapter extends BaseAdapter {
 		return position;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
+
+    /*****************************************************************************************
+     getView()
+     Creates a View Object with a coffee brewer image, name an hot or cold temp
+     and returns it for use in the ListView Adapter
+     *****************************************************************************************/
+    public View getView(int position, View convertView, ViewGroup parent) {
 
 		View newView = convertView;
 		ViewHolder holder;
@@ -63,13 +80,21 @@ public class BrewerViewAdapter extends BaseAdapter {
 
 		holder.brewerImg.setImageBitmap(curr.getImage());
 		holder.brewerName.setText(curr.getName());
-        if (curr.getTemp() ==1)
+        if (curr.getTemp() ==1) {
             holder.brewTemp.setText("Hot Temperature");
-        else
+            holder.brewTemp.setTextColor(Color.RED);
+        }
+        else {
             holder.brewTemp.setText("Cold Temperature");
+            holder.brewTemp.setTextColor(Color.BLUE);
+        }
 		return newView;
     }
-	
+
+    /*****************************************************************************************
+     ViewHolder()
+     Helper class to transfer information from a Brewer Object into textView and imageView Objects
+     *****************************************************************************************/
 	static class ViewHolder {
         //Organize views in the listview item
         ImageView brewerImg;
@@ -77,16 +102,28 @@ public class BrewerViewAdapter extends BaseAdapter {
         TextView brewTemp;
     }
 
+    /*****************************************************************************************
+     add()
+     Adds a new brewer into the ArrayList controlling the Adapter
+     *****************************************************************************************/
 	public void add(Brewer listItem) {
 		list.add(listItem);
         Log.d("Adpt", "List size: "+list.size());
 		notifyDataSetChanged();
 	}
-	
+
+    /*****************************************************************************************
+     getList()
+     Returns the ArrayList
+     *****************************************************************************************/
 	public ArrayList<Brewer> getList(){
 		return list;
 	}
-	
+
+    /*****************************************************************************************
+     removeAllViews()
+     Clears the array list
+     *****************************************************************************************/
 	public void removeAllViews(){
 		list.clear();
 		this.notifyDataSetChanged();

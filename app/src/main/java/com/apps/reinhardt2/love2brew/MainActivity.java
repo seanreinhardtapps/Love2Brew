@@ -1,6 +1,5 @@
 package com.apps.reinhardt2.love2brew;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -19,12 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,20 +51,18 @@ import java.util.List;
     Alarm dialog box allows user to register an alarm for a reminder
 
  ***********************************************************************************************/
-public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, DialogClickListener{
+public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, SwitchBrewerListener{
     public static PendingIntent mCoffeeReceiverPendingIntent;
-    Spinner hotSpinner;
-    Spinner coldSpinner;
-    public List<Brewer> hotBrewers = new ArrayList<Brewer>();
-    public List<Brewer> coldBrewers = new ArrayList<Brewer>();
+    public ArrayList<Brewer> hotBrewers = new ArrayList<Brewer>();
+    public ArrayList<Brewer> coldBrewers = new ArrayList<Brewer>();
     public Context mContext;
     static AlarmManager mCoffeeAlarmManager;
     private SharedPreferences sharedPreferences;
     private String mPrefName = "BrewerData";
     private String sRESULTS = "stored_results";
-    private boolean downloadLock = false;
     private BrewerViewAdapter mAdapter;
-    //public PendingIntent mCoffeeReceiverPendingIntent;
+    public static Context context;
+    SwitchBrewerListener sbListener;
 
     // Alarm Constants
     public static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hr Alarm Const
@@ -100,54 +93,10 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_front);
         mContext = getBaseContext();
-
+        context = this;
         mAdapter = new BrewerViewAdapter(getApplicationContext());
         setListAdapter(mAdapter);
 
-/*
-        // UI Objects
-        hotSpinner = (Spinner) findViewById(R.id.spnHot);
-        coldSpinner = (Spinner) findViewById(R.id.spnCold);
-
-        // Register Event listeners for Hot Brewer Spinner
-        hotSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            boolean init_hotSpinner = false;
-            // Prevent selection upon loading with init_hotSpinner boolean
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (!init_hotSpinner)
-                init_hotSpinner = true;
-            else
-                OpenBrewer(position,HOT_BREWER_TAG);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //no action
-
-                //Log.d("SPINNER","Spin:"+hotSpinner.getSelectedItemPosition());
-                OpenBrewer(hotSpinner.getSelectedItemPosition(),HOT_BREWER_TAG);
-            }
-        });
-
-        // Register Event listeners for Hot Brewer Spinner
-        coldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            boolean init_coldSpinner = false;
-            // Prevent selection upon loading with init_hotSpinner boolean
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!init_coldSpinner)
-                    init_coldSpinner = true;
-                else
-                    OpenBrewer(position,COLD_BREWER_TAG);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //no action
-            }
-        });
-*/
         // Prepare the alarm service intents
         // Get the AlarmManager Service
         mCoffeeAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -172,6 +121,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
             AllUpdates(temp_results);
         }
         mAdapter.notifyDataSetChanged();
+
     }
 
     /****************************************************************************************
@@ -239,6 +189,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         bund.putString("BHowWorks", b.getHowItWorks());
         bund.putString("BSteps", b.getSteps());
         bund.putString("BFile", b.getImageLocation());
+
         // load extras to intent and start tabs
         intent.putExtras(bund);
         startActivity(intent);
@@ -316,9 +267,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
             hotBrewers.add(0,empty);
             coldBrewers.add(0,empty);
 
-            //Load Spinners
-            //LoadHotTempSpinner();
-            //LoadColdTempSpinner();
         }
         catch (JSONException e)
         {
@@ -370,29 +318,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         else
             for (int h=0; h < b; h++)
                 new DownloadPicTask().execute(h + 1);
-    }
-
-    /****************************************************************************************
-     LoadHotTempSpinner()
-     Loads Hot temp Brewer List into the spinner
-     ***************************************************************************************/
-    private void LoadHotTempSpinner()
-    {
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>
-                (this,android.R.layout.simple_spinner_dropdown_item,hotBrewers);
-        hotSpinner.setAdapter(arrayAdapter);
-    }
-
-    /****************************************************************************************
-     LoadColdTempSpinner()
-     Loads Cold temp Brewer List into the spinner
-     ***************************************************************************************/
-    private void LoadColdTempSpinner()
-    {
-
-        ArrayAdapter<Brewer> arrayAdapter = new ArrayAdapter<Brewer>
-                (this,android.R.layout.simple_spinner_dropdown_item,coldBrewers);
-        coldSpinner.setAdapter(arrayAdapter);
     }
 
     /****************************************************************************************
@@ -483,9 +408,26 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      onYesClick() Callback method from AlarmDialogFrag to call PopToast
      ***************************************************************************************/
     @Override
-    public void onYesClick() {
-        PopToast("Reminder Set");
+    public void onSwitch(int position,int tag) {
+        OpenBrewer(position,tag);
     }
+
+    /****************************************************************************************
+     onYesClick() Callback method from AlarmDialogFrag to call PopToast
+     ***************************************************************************************/
+    @Override
+    public ArrayList<Brewer> getHotBrewer() {
+        return hotBrewers;
+    }
+
+    /****************************************************************************************
+     onYesClick() Callback method from AlarmDialogFrag to call PopToast
+     ***************************************************************************************/
+    @Override
+    public ArrayList<Brewer> getColdBrewer() {
+        return coldBrewers;
+    }
+
 }// End - MainActivity Class
 
 
@@ -565,6 +507,8 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
  DialogClickListener
  Callback interface for DialogFragments
  ***************************************************************************************/
-interface DialogClickListener {
-    public void onYesClick();
+interface SwitchBrewerListener {
+    public void onSwitch(int position, int tag);
+    public ArrayList<Brewer> getHotBrewer();
+    public ArrayList<Brewer> getColdBrewer();
 }

@@ -96,8 +96,9 @@ public class TabView extends Activity {
                     break;
                 case R.id.menu_aboutt:
                     ft = getFragmentManager().beginTransaction();
-                    AboutFragActivity abtFragment = new AboutFragActivity();
-                    abtFragment.show(ft,"Alarm");
+                    SwitchDialogFrag swtFragment = new SwitchDialogFrag();
+                   // swtFragment.setGetClientGetHttpListener(MainActivity.context);
+                    swtFragment.show(ft,"Switch");
                     break;
                 case R.id.menu_alarmt:
                     ft = getFragmentManager().beginTransaction();
