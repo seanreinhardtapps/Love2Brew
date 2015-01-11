@@ -11,6 +11,12 @@ package com.apps.reinhardt2.love2brew;
  * 2014
  */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
+import java.io.File;
+
 /**********************************************************************************************
  Brewer Class
  Model of Brewer - contains data and methods related to a coffee brewer
@@ -107,6 +113,16 @@ public class Brewer {
 
     public String getImageLocation() {
         return imageLocation;
+    }
+
+    public Bitmap getImage() {
+        String imagePath = "/Love2BrewData";
+        File sdCard = Environment.getExternalStorageDirectory();
+        File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
+        File file = new File(storageDir +"/"+ getImageLocation() + ".png");
+        //Load Bitmap to ImageView
+        Bitmap img = BitmapFactory.decodeFile(file.getAbsolutePath());
+        return img;
     }
 }// end - Brewer Class
 

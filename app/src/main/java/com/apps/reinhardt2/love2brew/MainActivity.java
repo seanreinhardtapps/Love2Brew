@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -54,7 +55,7 @@ import java.util.List;
     Alarm dialog box allows user to register an alarm for a reminder
 
  ***********************************************************************************************/
-public class MainActivity extends Activity implements GetHttp.IGetHttpListener, DialogClickListener{
+public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, DialogClickListener{
     public static PendingIntent mCoffeeReceiverPendingIntent;
     Spinner hotSpinner;
     Spinner coldSpinner;
@@ -66,6 +67,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     private String mPrefName = "BrewerData";
     private String sRESULTS = "stored_results";
     private boolean downloadLock = false;
+    private BrewerViewAdapter mAdapter;
     //public PendingIntent mCoffeeReceiverPendingIntent;
 
     // Alarm Constants
@@ -95,8 +97,13 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_front);
         mContext = getBaseContext();
+
+        mAdapter = new BrewerViewAdapter(getApplicationContext());
+        setListAdapter(mAdapter);
+
+/*
         // UI Objects
         hotSpinner = (Spinner) findViewById(R.id.spnHot);
         coldSpinner = (Spinner) findViewById(R.id.spnCold);
@@ -139,7 +146,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
                 //no action
             }
         });
-
+*/
         // Prepare the alarm service intents
         // Get the AlarmManager Service
         mCoffeeAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -182,6 +189,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         {
             AllUpdates(temp_results);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /*****************************************************************************************
@@ -242,6 +250,7 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
         AllUpdates(results);
         DismissProgressFrag();
         ManagePhotoDownloads();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**************************************************************************************
@@ -283,8 +292,8 @@ public class MainActivity extends Activity implements GetHttp.IGetHttpListener, 
             coldBrewers.add(0,empty);
 
             //Load Spinners
-            LoadHotTempSpinner();
-            LoadColdTempSpinner();
+            //LoadHotTempSpinner();
+            //LoadColdTempSpinner();
         }
         catch (JSONException e)
         {
