@@ -94,12 +94,12 @@ public class TabView extends Activity {
                 case R.id.menu_mainmt:
                     finish();
                     break;
-                case R.id.menu_aboutt:
+               /* case R.id.menu_aboutt:
                     ft = getFragmentManager().beginTransaction();
                     SwitchDialogFrag swtFragment = new SwitchDialogFrag();
                    // swtFragment.setGetClientGetHttpListener(MainActivity.context);
                     swtFragment.show(ft,"Switch");
-                    break;
+                    break;  */
                 case R.id.menu_alarmt:
                     ft = getFragmentManager().beginTransaction();
                     AlarmDialogFrag newFragment = new AlarmDialogFrag();

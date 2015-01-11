@@ -10,11 +10,11 @@ xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
             android:id="@+id/menu_mainmt"/>
 
-        <item   android:title="Switch Brewers"
+     <!--   <item   android:title="Switch Brewers"
             android:showAsAction="ifRoom|withText"
 
             android:id="@+id/menu_aboutt"/>
-
+-->
         <item   android:title="Set Reminder"
             android:showAsAction="ifRoom|withText"
 
