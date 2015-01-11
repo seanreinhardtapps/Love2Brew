@@ -32,7 +32,7 @@ public class BrewerViewAdapter extends BaseAdapter {
 		return list.size();
 	}
 
-	public Object getItem(int position) {
+	public Brewer getItem(int position) {
 		return list.get(position);
 	}
 
@@ -44,7 +44,7 @@ public class BrewerViewAdapter extends BaseAdapter {
 
 		View newView = convertView;
 		ViewHolder holder;
-
+        Log.d("Adpt","getView");
 		Brewer curr = list.get(position);
         if (curr==null) Log.d("Adpt", "HELP curr is null for position="+position);
 		if (null == convertView) {
@@ -79,6 +79,7 @@ public class BrewerViewAdapter extends BaseAdapter {
 
 	public void add(Brewer listItem) {
 		list.add(listItem);
+        Log.d("Adpt", "List size: "+list.size());
 		notifyDataSetChanged();
 	}
 	

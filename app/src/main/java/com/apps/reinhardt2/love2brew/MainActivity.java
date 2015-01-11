@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -170,6 +171,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         {
             AllUpdates(temp_results);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     /****************************************************************************************
@@ -222,7 +224,25 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
             startActivity(intent);
         }
     }
-
+    /*****************************************************************************************
+     OpenBrewerWithObject()
+     Opens a new activity for the desired hot or cold brewer by receiving Brewer object
+     *****************************************************************************************/
+    private void OpenBrewerWithObject(Brewer b){
+        //Prepare intent and load with data
+        Intent intent = new Intent(this, TabView.class);
+        // Bundle needed for extras
+        Bundle bund = new Bundle();
+        bund.putString("BName", b.getName());
+        bund.putString("BOverview", b.getOverview());
+        bund.putString("BHistory", b.getHistory());
+        bund.putString("BHowWorks", b.getHowItWorks());
+        bund.putString("BSteps", b.getSteps());
+        bund.putString("BFile", b.getImageLocation());
+        // load extras to intent and start tabs
+        intent.putExtras(bund);
+        startActivity(intent);
+    }
     /****************************************************************************************
      checkUpdates()
      Method handles calls related to downloads
@@ -247,10 +267,12 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      **************************************************************************************/
     @Override
     public void onGetHttpSuccess(String results) {
+        Log.d(MTAG,results);
         AllUpdates(results);
+        mAdapter.notifyDataSetChanged();
         DismissProgressFrag();
         ManagePhotoDownloads();
-        mAdapter.notifyDataSetChanged();
+
     }
 
     /**************************************************************************************
@@ -264,6 +286,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         try {
             // de-serialization occurs in constructor - object is an array
             JSONArray jsonArray = new JSONArray(results);
+            mAdapter.removeAllViews();
             hotBrewers.clear();
             coldBrewers.clear();
             for (int i = 0; i < jsonArray.length();i++)
@@ -279,6 +302,8 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
                 brewer.setHistory(jsonObject.getString("history"));
                 brewer.setSteps(jsonObject.getString("steps"));
                 brewer.setRating(jsonObject.getInt("rating"));
+                Log.d("MTAG", "Adding a new brewer "+brewer.getName());
+                mAdapter.add(brewer);
                 if (brewer.getTemp() == 1)
                     hotBrewers.add(brewer);
                 else
@@ -370,6 +395,15 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         coldSpinner.setAdapter(arrayAdapter);
     }
 
+    /****************************************************************************************
+     onListItemClick()
+     Prepares call to appropriate Coffee Brewer Activity
+     ***************************************************************************************/
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Brewer brewer = mAdapter.getItem(position);
+        OpenBrewerWithObject(brewer);
+    }
     /****************************************************************************************
      onCreateOptionsMenu()
      Inflates Menu

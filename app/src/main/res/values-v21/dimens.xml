@@ -7,4 +7,6 @@
     <dimen name="activity_font_tab_body_port">28sp</dimen>
     <dimen name="activity_font_top_port">36sp</dimen>
     <dimen name="activity_font_sub_port">32sp</dimen>
+    <dimen name="activity_listitem_name_port">24sp</dimen>
+    <dimen name="activity_listitem_temp_port">18sp</dimen>
 </resources>

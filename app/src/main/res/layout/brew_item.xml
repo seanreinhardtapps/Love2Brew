@@ -7,8 +7,8 @@
     <ImageView
         android:id="@+id/brewSmallImg"
 
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/logo_height"
+        android:layout_height="@dimen/logo_height"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         android:singleLine="false"
         android:textColor="#fd000101"
 
-        android:textSize="16sp" />
+        android:textSize="@dimen/activity_listitem_name_port" />
         <TextView
             android:id="@+id/brw_name2"
             android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:singleLine="false"
             android:textColor="#fd000101"
 
-            android:textSize="12sp" />
+            android:textSize="@dimen/activity_listitem_temp_port" />
     </LinearLayout>
 
 
