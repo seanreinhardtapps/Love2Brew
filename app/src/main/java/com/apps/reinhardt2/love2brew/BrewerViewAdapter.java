@@ -78,16 +78,18 @@ public class BrewerViewAdapter extends BaseAdapter {
 			holder = (ViewHolder) newView.getTag();
 		}
 
-		holder.brewerImg.setImageBitmap(curr.getImage());
+		holder.brewerImg.setImageBitmap(null);
 		holder.brewerName.setText(curr.getName());
         if (curr.getTemp() ==1) {
-            holder.brewTemp.setText("Hot Temperature");
+            holder.brewTemp.setText("Hot Coffee");
             holder.brewTemp.setTextColor(Color.RED);
         }
         else {
-            holder.brewTemp.setText("Cold Temperature");
+            holder.brewTemp.setText("Cold Coffee");
             holder.brewTemp.setTextColor(Color.BLUE);
         }
+
+        holder.brewerImg.setImageBitmap(curr.getImage());
 		return newView;
     }
 

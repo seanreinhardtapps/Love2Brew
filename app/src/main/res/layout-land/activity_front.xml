@@ -8,11 +8,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select"
-            android:textSize="@dimen/activity_font_top_port"
+            android:textSize="@dimen/activity_font_top_land"
             android:textColor="#ddaa3508"
             android:textStyle="bold" />
         <ListView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@android:id/list">
 

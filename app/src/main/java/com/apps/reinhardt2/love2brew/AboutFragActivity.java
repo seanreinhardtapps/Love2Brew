@@ -22,11 +22,11 @@ public class AboutFragActivity extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String msg = "Love2Brew Android Application\nThis App downloads info about various " +
-                "coffee brewers from a from a web service.  The selected brewing technique is displayed " +
-                "in a tabbed fragment activity.  This app can also set a coffee brewing reminder that sends " +
-                "a notification when the user selects.\n\nDesigned by Sean Reinhardt from Orange County, " +
-                "California, United States.";
+        String msg = "Love2Brew Android Application\n\nWould you like to learn some new ways to brew " +
+                "your coffee?  This App downloads info and step-by-step instructions about some fun coffee brewers."+
+                "\nSelect a  brewing technique "+
+                "to learn more about it.  \nTo set a reminder for your coffee, click \"Set A Reminder\" "+
+                "from the menu.  The reminder will be sent to your notification bar.\n\nDesigned by SeanReinhardtApps.";
 
         final ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setTitle("About");

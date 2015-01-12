@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.apps.reinhardt2.love2brew"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -15,7 +15,7 @@ android {
         release {
 
             minifyEnabled true
-
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
