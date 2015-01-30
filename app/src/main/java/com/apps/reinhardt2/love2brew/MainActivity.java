@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +96,14 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         mContext = getBaseContext();
         context = this;
         mAdapter = new BrewerViewAdapter(getApplicationContext());
+
+
+        //Attach footer view to download updates
+        View footerView =  ((LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer, null, false);
+        ListView list = (ListView)findViewById(android.R.id.list);
+        list.addFooterView(footerView);
+
+        //set the list adapter
         setListAdapter(mAdapter);
 
         // Prepare the alarm service intents
@@ -108,9 +117,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         mCoffeeReceiverPendingIntent = PendingIntent.getBroadcast(
                 this, 0, mCoffeeAlarmReceiverIntent, 0);
 
-        // Perform network update, download images required,
-        // load spinners
-            checkUpdates();
+
 
         //Load Shared Preferences
         //Get JSON String from storage, if exists launch AllUpdates Method to load brewers
@@ -120,8 +127,21 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         {
             AllUpdates(temp_results);
         }
+        else {
+            // Perform network update, download images required,
+            checkUpdates();
+        }
         mAdapter.notifyDataSetChanged();
 
+    }
+
+    /*****************************************************************************************
+     footerClick()
+     Event handler for list's footer click, calls checkUpdates method
+     *****************************************************************************************/
+    public void footerClick(View v)
+    {
+        checkUpdates();
     }
 
     /****************************************************************************************
