@@ -20,6 +20,7 @@ import android.view.MenuItem;
  */
 public class TabView extends Activity {
     Brewer brewer;
+    ActionBar ab;
     /*****************************************************************************************
      onCreate()
      -inflate view
@@ -50,7 +51,7 @@ public class TabView extends Activity {
         //Log.d("TABS", "Steps:" + t3[0]);
 
         //Activate tabs on action bar
-        ActionBar ab = getActionBar();
+        ab = getActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         //Instanciate the three tabs and provide data
@@ -68,7 +69,24 @@ public class TabView extends Activity {
                 .setText(getString(R.string.title_section4))
                 .setTabListener(new MyTabListener(this, TabFrag3.class.getName(), t3));
         ab.addTab(tab);
+
+        //if configuration change occurred, restore viewed tab to display
+        if (savedInstanceState != null)
+        {
+            ab.setSelectedNavigationItem(savedInstanceState.getInt("tabState"));
+        }
     }
+
+    /****************************************************************************************
+     onSaveInstanceState()
+     Save which tab is currently being displayed as int value
+     ***************************************************************************************/
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tabState", ab.getSelectedTab().getPosition());
+    }
+
         /****************************************************************************************
          onCreateOptionsMenu()
          Inflates Menu
@@ -131,6 +149,7 @@ public class TabView extends Activity {
             mActivity = activity;
             mFragName = fragName;
             mData = data;
+
         }
 
         @Override
@@ -165,7 +184,10 @@ public class TabView extends Activity {
         public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
             //nothing
         }
+
+
     }
+
 
 
 }
