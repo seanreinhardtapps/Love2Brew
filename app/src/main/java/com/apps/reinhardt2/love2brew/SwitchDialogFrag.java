@@ -28,10 +28,15 @@ public class SwitchDialogFrag extends DialogFragment{
     Spinner hotSpinner;
     Spinner coldSpinner;
 
-    /********************************************************************************************
-     onCreateDialog()
-     Dialog Builder is called to display Dialog Fragment
-     *******************************************************************************************/
+
+    /**
+     * onCreateDialog()
+     * Dialog Builder is called to display Dialog Fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState - bundle with saved state
+     * @return - View Fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.switch_dialog, container, false);
@@ -89,10 +94,11 @@ public class SwitchDialogFrag extends DialogFragment{
         this.switchBrewerListener = clientswitchCallback;
     }// client hook
 
-    /****************************************************************************************
-     LoadHotTempSpinner()
-     Loads Hot temp Brewer List into the spinner
-     ***************************************************************************************/
+
+    /**
+     * LoadHotTempSpinner()
+     * Loads Hot temp Brewer List into the spinner
+     */
     private void LoadHotTempSpinner()
     {
         ArrayList hotBrewers = switchBrewerListener.getHotBrewer();
@@ -101,10 +107,11 @@ public class SwitchDialogFrag extends DialogFragment{
         hotSpinner.setAdapter(arrayAdapter);
     }
 
-    /****************************************************************************************
-     LoadColdTempSpinner()
-     Loads Cold temp Brewer List into the spinner
-     ***************************************************************************************/
+
+    /**
+     * LoadColdTempSpinner()
+     * Loads Cold temp Brewer List into the spinner
+     */
     private void LoadColdTempSpinner()
     {
         ArrayList coldBrewers = switchBrewerListener.getColdBrewer();

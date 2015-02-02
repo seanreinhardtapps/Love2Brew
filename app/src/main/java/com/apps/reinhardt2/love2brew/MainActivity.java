@@ -39,19 +39,15 @@ import java.util.List;
  * Java Android Application
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
+ * Main activity of Love2Brew App
+ * Implements GetHttp.IGetHttpListener to download JSON data of coffee brewers from web service
+ * Extends ListActivity
+ * Row selection opens another activity to display all information related to selection
+ * Menu bar contains button open dialog box for alarm
+ * Alarm dialog box allows user to register an alarm for a reminder
  *
  * 2014
  */
-
-/**********************************************************************************************
-    Main activity of Love2Brew App
-    Implements GetHttp.IGetHttpListener to download JSON data of coffee brewers from web service
-    Loads and displays spinners to select from hot or cold coffee brewers
-    Selection of spinner opens another activity to display all information related to selection
-    Menu bar contains button open dialog box for alarm
-    Alarm dialog box allows user to register an alarm for a reminder
-
- ***********************************************************************************************/
 public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, SwitchBrewerListener{
     public static PendingIntent mCoffeeReceiverPendingIntent;
     public ArrayList<Brewer> hotBrewers = new ArrayList<Brewer>();
@@ -82,13 +78,17 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
     //Server Location
     public final String SERVER = "http://coffee.sreinhardt.com/api/CoffeeBrewers/";
 
-    /*****************************************************************************************
-     onCreate()
-     -inflate view
-     -Register listeners for Hot and Cold Temp Spinners
-     -Setup of Alarm Manager
-     -Start Methods for JSON and Image Downloads
-     *****************************************************************************************/
+
+   /**
+    * onCreate()
+    * -inflate view
+    * -instanciates listView and footer view
+    * -loads shared preferences data
+    * -Setup of Alarm Manager
+    * -Start Methods for JSON and Image Downloads
+    *
+    * @param savedInstanceState - bundle with instance data from config changes
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,21 +135,25 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 
     }
 
-    /*****************************************************************************************
-     footerClick()
-     Event handler for list's footer click, calls checkUpdates method
-     *****************************************************************************************/
+
+   /**
+    * footerClick()
+    * Event handler for list's footer click, calls checkUpdates method
+    *
+    * @param v - View which contains footer
+    */
     public void footerClick(View v)
     {
         checkUpdates();
     }
 
-    /****************************************************************************************
-     onResume()
-     Called when app reloads to view
-     -Check for downloaded data
-     -call AllUpdates method to load data
-     ***************************************************************************************/
+
+    /**
+     * onResume()
+     * Called when app reloads to view
+     * -Check for downloaded data
+     * -call AllUpdates method to load data
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -164,10 +168,14 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         mAdapter.notifyDataSetChanged();
     }
 
-    /*****************************************************************************************
-     OpenBrewer()
-     Opens a new activity for the desired hot or cold brewer
-     *****************************************************************************************/
+
+    /**
+     * OpenBrewer()
+     * Opens a new activity for the desired hot or cold brewer
+     *
+     * @param position - location in the Brewer ArrayList
+     * @param tag - identifies hot or cold brewer
+     */
     private void OpenBrewer(int position, int tag) {
         //Log.d(MTAG,"Trying to set an image");
         // Get brewer, Collect from hot or cold list based on selection
@@ -194,10 +202,14 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
             startActivity(intent);
         }
     }
-    /*****************************************************************************************
-     OpenBrewerWithObject()
-     Opens a new activity for the desired hot or cold brewer by receiving Brewer object
-     *****************************************************************************************/
+
+
+    /**
+     * OpenBrewerWithObject()
+     * Opens a new activity for the desired hot or cold brewer by receiving Brewer object
+     *
+     * @param b - Coffee Brewer object to send to Activity
+     */
     private void OpenBrewerWithObject(Brewer b){
         //Prepare intent and load with data
         Intent intent = new Intent(this, TabView.class);
@@ -214,12 +226,14 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         intent.putExtras(bund);
         startActivity(intent);
     }
-    /****************************************************************************************
-     checkUpdates()
-     Method handles calls related to downloads
-     -Displays download dialog
-     -Executes the GetHttp interface that downloads the JSON Data from web service
-     ***************************************************************************************/
+
+
+    /**
+     * checkUpdates()
+     * Method handles calls related to downloads
+     * -Displays download dialog
+     * -Executes the GetHttp interface that downloads the JSON Data from web service
+     */
     private void checkUpdates()
     {
         showProgressFrag("Checking For Updates...");
@@ -229,13 +243,16 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         getHttp.execute();
     }
 
-    /***************************************************************************************
-     onGetHttpSuccess()
-     Method called after Async Task for download is done
-     -Processes JSON data
-     -Dismisses Dialog
-     -Checks for photos to download
-     **************************************************************************************/
+
+    /**
+     * onGetHttpSuccess()
+     * Method called after Async Task for download is done
+     * -Processes JSON data
+     *  -Dismisses Dialog
+     *  -Checks for photos to download
+     *
+     * @param results - JSON Data String
+     */
     @Override
     public void onGetHttpSuccess(String results) {
         Log.d(MTAG,results);
@@ -246,12 +263,15 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 
     }
 
-    /**************************************************************************************
-     AllUpdates()
-     De-serializes JSON Array into JSON objects
-     Then creates Brewer Objects for the JSON objects
-     Finally, calls the Spinner Loading Methods
-     *************************************************************************************/
+
+    /**
+     * AllUpdates()
+     * De-serializes JSON Array into JSON objects
+     * Then creates Brewer Objects for the JSON objects
+     * Finally, calls the Spinner Loading Methods
+     *
+     * @param results - JSON Data String
+     */
     private void AllUpdates(String results)
     {
         try {
@@ -300,11 +320,12 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 
     }
 
-    /***********************************************************************************
-     ManagePhotoDownloads()
-     Connects to the storage directory and reads the files loaded
-     Calls DownloadPicTask on all missing pics
-     **********************************************************************************/
+
+    /**
+     * ManagePhotoDownloads()
+     * Connects to the storage directory and reads the files loaded
+     * Calls DownloadPicTask on all missing pics
+     */
     private void ManagePhotoDownloads() {
         int i = 0;
         int b = hotBrewers.size()+coldBrewers.size()-2;
@@ -340,19 +361,28 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
                 new DownloadPicTask().execute(h + 1);
     }
 
-    /****************************************************************************************
-     onListItemClick()
-     Prepares call to appropriate Coffee Brewer Activity
-     ***************************************************************************************/
+
+    /**
+     * onListItemClick()
+     * Prepares call to appropriate Coffee Brewer Activity
+     * @param l - reference to listView
+     * @param v - reference to View
+     * @param position - position in ListView
+     * @param id
+     */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Brewer brewer = mAdapter.getItem(position);
         OpenBrewerWithObject(brewer);
     }
-    /****************************************************************************************
-     onCreateOptionsMenu()
-     Inflates Menu
-     ***************************************************************************************/
+
+
+    /**
+     * onCreateOptionsMenu()
+     * Inflates Menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -360,10 +390,13 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         return true;
     }
 
-    /****************************************************************************************
-     onOptionsItemSelected()
-     Alarm Button Opens dialog to set an alarm
-     ***************************************************************************************/
+
+    /**
+     * onOptionsItemSelected()
+     * Alarm Button Opens dialog to set an alarm
+     * @param item - reference to menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -391,10 +424,12 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         return false;
     }
 
-    /****************************************************************************************
-     showProgressFrag()
-     Launches a dialog fragment
-     ***************************************************************************************/
+
+    /**
+     * showProgressFrag()
+     * Launches a dialog fragment
+     * @param text - Message to be passed to dialog fragment
+     */
     private void showProgressFrag(String text)
     {
         DialogFragment dialogFragment = new ProcessFragActivity();
@@ -404,10 +439,11 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         dialogFragment.show(getFragmentManager(), "progressFrag");
     }
 
-    /****************************************************************************************
-     DismissProgressFrag()
-     Dismisses a dialog fragment
-     ***************************************************************************************/
+
+    /**
+     * DismissProgressFrag()
+     * Dismisses a dialog fragment
+     */
     private void DismissProgressFrag()
     {
         FragmentManager fragmentManager = getFragmentManager();
@@ -417,32 +453,41 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
             dialogFragment.dismiss();
     }
 
-    /****************************************************************************************
-     PopToast() Display quick messages to user
-     ***************************************************************************************/
+
+    /**
+     * PopToast() Display quick messages to user
+     * @param text - Message to be sent to Toast
+     */
     public void PopToast(String text){
         Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
     }
 
-    /****************************************************************************************
-     onYesClick() Callback method from AlarmDialogFrag to call PopToast
-     ***************************************************************************************/
+
+    /**
+     * onYesClick() Callback method from AlarmDialogFrag to call PopToast
+     * @param position - position in Brewer arraylist
+     * @param tag - Hot or Cold Brewer
+     */
     @Override
     public void onSwitch(int position,int tag) {
         OpenBrewer(position,tag);
     }
 
-    /****************************************************************************************
-     onYesClick() Callback method from AlarmDialogFrag to call PopToast
-     ***************************************************************************************/
+
+    /**
+     * getHotBrewer() Callback to return ArrayList of Hot Coffee Brewers
+     * @return ArrayList of Coffee Brewers
+     */
     @Override
     public ArrayList<Brewer> getHotBrewer() {
         return hotBrewers;
     }
 
-    /****************************************************************************************
-     onYesClick() Callback method from AlarmDialogFrag to call PopToast
-     ***************************************************************************************/
+
+    /**
+     * getColdBrewer() Callback to return ArrayList of Cold Coffee Brewers
+     * @return ArrayList of Coffee Brewers
+     */
     @Override
     public ArrayList<Brewer> getColdBrewer() {
         return coldBrewers;
@@ -451,18 +496,21 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 }// End - MainActivity Class
 
 
-/****************************************************************************************
- DownloadPicTask Class
- Class Hosts an Async Task used to download images from the web service
- ***************************************************************************************/
+/**
+ * DownloadPicTask Class
+ * Class Hosts an Async Task used to download images from the web service
+ */
 class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
 
-    /****************************************************************************************
-     doInBackground()
-     Define filename
-     connect to pictures dictionary
-     open file stream and download bitmap
-     ***************************************************************************************/
+
+    /**
+     * doInBackground()
+     * Define filename
+     * connect to pictures dictionary
+     * open file stream and download bitmap
+     * @param Pos - Position integer identifies which image # to download
+     * @return - None
+     */
     @Override
     protected Void doInBackground(Integer... Pos) {
         // Create an image file name
@@ -523,10 +571,10 @@ class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
 }//end - DownloadPicTask Class
 
 
-/****************************************************************************************
- DialogClickListener
- Callback interface for DialogFragments
- ***************************************************************************************/
+/**
+ * DialogClickListener
+ * Callback interface for DialogFragments
+ */
 interface SwitchBrewerListener {
     public void onSwitch(int position, int tag);
     public ArrayList<Brewer> getHotBrewer();

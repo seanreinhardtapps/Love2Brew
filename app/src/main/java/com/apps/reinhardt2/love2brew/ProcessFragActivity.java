@@ -12,12 +12,10 @@ import android.os.Bundle;
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ * ProcessFragActivity - Produces a Dialog Fragment
+ *
  * 2014
  */
-
-/**********************************************************************************************
- ProcessFragActivity - Produces a Dialog Fragment
-***********************************************************************************************/
 public class ProcessFragActivity extends DialogFragment {
 
     @Override

@@ -17,15 +17,13 @@ import java.net.URL;
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ * GetHttp Async Class
+ * Defines IGetHttpListener interface to download JSON data of coffee brewers from web service
+ * Connects a HTTP Url connect to the web server and performs a GET
+ * Uses a string buffer to receive JSON Array
+ *
  * 2014
  */
-
-/**********************************************************************************************
- GetHttp Async Class
- Defines IGetHttpListener interface to download JSON data of coffee brewers from web service
- Connects a HTTP Url connect to the web server and performs a GET
- Uses a string buffer to receive JSON Array
- ***********************************************************************************************/
 public class GetHttp extends AsyncTask<Void, Void, String> {
     public interface IGetHttpListener {
         public void onGetHttpSuccess(String results);
@@ -43,6 +41,13 @@ public class GetHttp extends AsyncTask<Void, Void, String> {
         mUrl = ConnectTo;
     }// url where file is download FROM
 
+    /**
+     * doInBackground()
+     * connects to server
+     * opens a connection and uses a buffered reader to collect the JSON string into a StringBuilder object
+     * @param voids
+     * @return - JSON Data String
+     */
     @Override
     protected String doInBackground(Void... voids) {
         String results = "";

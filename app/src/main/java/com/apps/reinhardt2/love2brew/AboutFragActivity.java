@@ -12,14 +12,16 @@ import android.os.Bundle;
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ *  AboutFragActivity - Produces a Dialog Fragment
+ *
  * 2014
  */
-
-/**********************************************************************************************
- AboutFragActivity - Produces a Dialog Fragment
-***********************************************************************************************/
 public class AboutFragActivity extends DialogFragment {
-
+    /**
+     * Displays a dialog fragment
+     * @param savedInstanceState
+     * @return - Dialog Fragment
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String msg = "Love2Brew Android Application\n\nWould you like to learn some new ways to brew " +

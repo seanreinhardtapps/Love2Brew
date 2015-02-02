@@ -20,19 +20,22 @@ import android.widget.Toast;
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ * AlertDialogFrag Class
+ * Produces a Dialog Fragment to select Reminder Duration or cancel
+ *
  * 2014
  */
-
-/**********************************************************************************************
- AlertDialogFrag Class
- Produces a Dialog Fragment to select Reminder Duration or cancel
- ***********************************************************************************************/
 public class AlarmDialogFrag extends DialogFragment {
 
-    /********************************************************************************************
-     onCreateDialog()
-     Dialog Builder is called to display Dialog Fragment
-     *******************************************************************************************/
+
+    /**
+     * onCreateDialog()
+     * Dialog Builder is called to display Dialog Fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_alarm, container, false);

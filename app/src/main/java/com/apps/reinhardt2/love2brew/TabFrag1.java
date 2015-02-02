@@ -25,14 +25,20 @@ import java.io.File;
  */
 public class TabFrag1 extends Fragment {
     String[] data;
-    /*****************************************************************************************
-     onCreateView()
-     -inflate view
-     -Pull Data from bundle
-     -Load text to textViews
-     -Locate image file from storage location
-     -Load image to imageView
-     *****************************************************************************************/
+
+
+    /**
+     *  onCreateView()
+     * inflate view
+     * Pull Data from bundle
+     * Load text to textViews
+     * Locate image file from storage location
+     * Load image to imageView
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

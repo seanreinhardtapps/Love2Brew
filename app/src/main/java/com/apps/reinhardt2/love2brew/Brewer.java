@@ -8,6 +8,9 @@ package com.apps.reinhardt2.love2brew;
  * This file is a module in the application: Love2Brew
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ * Brewer Class
+ * Model of Brewer - contains data and methods related to a coffee brewer
+ *
  * 2014
  */
 
@@ -17,10 +20,7 @@ import android.os.Environment;
 
 import java.io.File;
 
-/**********************************************************************************************
- Brewer Class
- Model of Brewer - contains data and methods related to a coffee brewer
- ***********************************************************************************************/
+
 public class Brewer {
 
         //Instance Variables
@@ -115,6 +115,11 @@ public class Brewer {
         return imageLocation;
     }
 
+    /**
+     * getImage()
+     * finds Image on the SD Card and returns a Bitmap of it
+     * @return
+     */
     public Bitmap getImage() {
         String imagePath = "/Love2BrewData";
         File sdCard = Environment.getExternalStorageDirectory();

@@ -20,14 +20,11 @@ import android.widget.TextView;
  * // This extension of BaseAdapter makes the listView of images
  * Project host at https://www.github.com/SeanReinhardtApps/Love2Brew
  *
+ * BrewerViewActivity of Love2Brew App
+ * Extension of BaseAdapter that implements a custom ListView
+ *
  * 2015
  */
-
-/**********************************************************************************************
- BrewerViewActivity of Love2Brew App
- Extension of BaseAdapter that implements a custom ListView
-
- ***********************************************************************************************/
 public class BrewerViewAdapter extends BaseAdapter {
 
 	private ArrayList<Brewer> list = new ArrayList<Brewer>();
@@ -52,11 +49,16 @@ public class BrewerViewAdapter extends BaseAdapter {
 	}
 
 
-    /*****************************************************************************************
-     getView()
-     Creates a View Object with a coffee brewer image, name an hot or cold temp
-     and returns it for use in the ListView Adapter
-     *****************************************************************************************/
+
+    /**
+     * getView()
+     * Creates a View Object with a coffee brewer image, name an hot or cold temp
+     * and returns it for use in the ListView Adapter
+     * @param position - position in list
+     * @param convertView - the view being recycled
+     * @param parent
+     * @return - A view representing one cell in the list
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
 
 		View newView = convertView;
@@ -93,10 +95,12 @@ public class BrewerViewAdapter extends BaseAdapter {
 		return newView;
     }
 
-    /*****************************************************************************************
-     ViewHolder()
-     Helper class to transfer information from a Brewer Object into textView and imageView Objects
-     *****************************************************************************************/
+
+    /**
+     * ViewHolder()
+     * Helper class to transfer information from a Brewer Object into textView and imageView Objects
+     * Saves from using findViewById and resource impact from calling it
+     */
 	static class ViewHolder {
         //Organize views in the listview item
         ImageView brewerImg;
@@ -104,28 +108,33 @@ public class BrewerViewAdapter extends BaseAdapter {
         TextView brewTemp;
     }
 
-    /*****************************************************************************************
-     add()
-     Adds a new brewer into the ArrayList controlling the Adapter
-     *****************************************************************************************/
+
+    /**
+     * add()
+     * Adds a new brewer into the ArrayList controlling the Adapter
+     * @param listItem - Cofee Brewer Object to add
+     */
 	public void add(Brewer listItem) {
 		list.add(listItem);
         Log.d("Adpt", "List size: "+list.size());
 		notifyDataSetChanged();
 	}
 
-    /*****************************************************************************************
-     getList()
-     Returns the ArrayList
-     *****************************************************************************************/
+
+    /**
+     * getList()
+     * Returns the ArrayList
+     * @return - ArrayList collection of Brewers in the list
+     */
 	public ArrayList<Brewer> getList(){
 		return list;
 	}
 
-    /*****************************************************************************************
-     removeAllViews()
-     Clears the array list
-     *****************************************************************************************/
+
+    /**
+     * removeAllViews()
+     * Clears the array list
+     */
 	public void removeAllViews(){
 		list.clear();
 		this.notifyDataSetChanged();

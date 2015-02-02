@@ -21,13 +21,16 @@ import android.view.MenuItem;
 public class TabView extends Activity {
     Brewer brewer;
     ActionBar ab;
-    /*****************************************************************************************
-     onCreate()
-     -inflate view
-     -Register listeners for Hot and Cold Temp Spinners
-     -Setup of Alarm Manager
-     -Start Methods for JSON and Image Downloads
-     *****************************************************************************************/
+
+
+    /**
+     * onCreate()
+     * inflate view
+     * Register listeners for Hot and Cold Temp Spinners
+     * Setup of Alarm Manager
+     * Start Methods for JSON and Image Downloads
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,20 +80,25 @@ public class TabView extends Activity {
         }
     }
 
-    /****************************************************************************************
-     onSaveInstanceState()
-     Save which tab is currently being displayed as int value
-     ***************************************************************************************/
+
+    /**
+     * onSaveInstanceState()
+     * Save which tab is currently being displayed as int value
+     * @param outState - bundle - contains the current tab
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("tabState", ab.getSelectedTab().getPosition());
     }
 
-        /****************************************************************************************
-         onCreateOptionsMenu()
-         Inflates Menu
-         ***************************************************************************************/
+
+    /**
+     * onCreateOptionsMenu()
+     * Inflates Menu
+     * @param menu
+     * @return
+     */
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
@@ -98,10 +106,13 @@ public class TabView extends Activity {
             return true;
         }
 
-        /****************************************************************************************
-         onOptionsItemSelected()
-         Alarm Button Opens dialog to set an alarm
-         ***************************************************************************************/
+
+    /**
+     * onOptionsItemSelected()
+     * Alarm Button Opens dialog to set an alarm
+     * @param item - Menu item selection
+     * @return
+     */
         @Override
         public boolean onOptionsItemSelected(MenuItem item){
             // Handle action bar item clicks here. The action bar will
@@ -130,12 +141,13 @@ public class TabView extends Activity {
             return false;
         }
 
-    /*****************************************************************************************
-     myTabListener()
-     Implements ActionBar.TabListener Interface
-     -Receives Tab Data
-     -Sets and loads all fragments from tab interface
-     *****************************************************************************************/
+
+    /**
+     * myTabListener()
+     * Implements ActionBar.TabListener Interface
+     * Receives Tab Data
+     * Sets and loads all fragments from tab interface
+     */
     private class MyTabListener implements ActionBar.TabListener {
 
         private Fragment mFragment;

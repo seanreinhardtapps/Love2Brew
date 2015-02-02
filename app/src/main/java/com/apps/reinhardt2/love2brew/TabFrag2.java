@@ -19,12 +19,18 @@ import android.widget.TextView;
  */
 public class TabFrag2 extends Fragment {
     String[] data2;
-    /*****************************************************************************************
-     onCreateView()
-     -inflate view
-     -Pull Data from bundle
-     -Load text to textViews
-     *****************************************************************************************/
+
+
+    /**
+     * onCreateView()
+     * inflate view
+     * Pull Data from bundle
+     * Load text to textViews
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
