@@ -9,29 +9,18 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 /**
  * SEANREINHARDTAPPS
@@ -48,10 +37,8 @@ import java.util.List;
  *
  * 2014
  */
-public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, SwitchBrewerListener{
+public class MainActivity extends ListActivity implements GetHttp.IGetHttpListener, DownloadPicTask.PicDownloadListener {
     public static PendingIntent mCoffeeReceiverPendingIntent;
-    public ArrayList<Brewer> hotBrewers = new ArrayList<Brewer>();
-    public ArrayList<Brewer> coldBrewers = new ArrayList<Brewer>();
     public Context mContext;
     static AlarmManager mCoffeeAlarmManager;
     private SharedPreferences sharedPreferences;
@@ -59,7 +46,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
     private String sRESULTS = "stored_results";
     private BrewerViewAdapter mAdapter;
     public static Context context;
-    SwitchBrewerListener sbListener;
 
     // Alarm Constants
     public static final long TWELVE_HOUR_ALARM_DELAY = 12* 60 * 60 * 1000;  // 12 Hr Alarm Const
@@ -69,11 +55,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 
     //Tag Constants for log calls
     public static final String MTAG = "Main Activity";
-    public static final String ATAG = "Alarm Activity";
 
-    //Hot and cold Brewer Control Tags
-    public static final int HOT_BREWER_TAG = 101;
-    public static final int COLD_BREWER_TAG = 102;
 
     //Server Location
     public final String SERVER = "http://coffee.sreinhardt.com/api/CoffeeBrewers/";
@@ -170,41 +152,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
 
 
     /**
-     * OpenBrewer()
-     * Opens a new activity for the desired hot or cold brewer
-     *
-     * @param position - location in the Brewer ArrayList
-     * @param tag - identifies hot or cold brewer
-     */
-    private void OpenBrewer(int position, int tag) {
-        //Log.d(MTAG,"Trying to set an image");
-        // Get brewer, Collect from hot or cold list based on selection
-        //if position == 0, then it's the selection text, not a real brewer
-        if (position != 0) {
-            Brewer b;
-            if (tag == HOT_BREWER_TAG)
-                b = hotBrewers.get(position);
-            else
-                b = coldBrewers.get(position);
-
-            //Prepare intent and load with data
-            Intent intent = new Intent(this, TabView.class);
-            // Bundle needed for extras
-            Bundle bund = new Bundle();
-            bund.putString("BName", b.getName());
-            bund.putString("BOverview", b.getOverview());
-            bund.putString("BHistory", b.getHistory());
-            bund.putString("BHowWorks", b.getHowItWorks());
-            bund.putString("BSteps", b.getSteps());
-            bund.putString("BFile", b.getImageLocation());
-            // load extras to intent and start tabs
-            intent.putExtras(bund);
-            startActivity(intent);
-        }
-    }
-
-
-    /**
      * OpenBrewerWithObject()
      * Opens a new activity for the desired hot or cold brewer by receiving Brewer object
      *
@@ -249,7 +196,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      * Method called after Async Task for download is done
      * -Processes JSON data
      *  -Dismisses Dialog
-     *  -Checks for photos to download
      *
      * @param results - JSON Data String
      */
@@ -259,8 +205,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         AllUpdates(results);
         mAdapter.notifyDataSetChanged();
         DismissProgressFrag();
-        ManagePhotoDownloads();
-
     }
 
 
@@ -268,45 +212,27 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      * AllUpdates()
      * De-serializes JSON Array into JSON objects
      * Then creates Brewer Objects for the JSON objects
-     * Finally, calls the Spinner Loading Methods
+     * Adds objects to ListViews internal list
+     * Then adds JSON String to shared preferences
      *
      * @param results - JSON Data String
      */
     private void AllUpdates(String results)
     {
-        try {
+        try
+        {
             // de-serialization occurs in constructor - object is an array
             JSONArray jsonArray = new JSONArray(results);
             mAdapter.removeAllViews();
-            hotBrewers.clear();
-            coldBrewers.clear();
+
             for (int i = 0; i < jsonArray.length();i++)
             {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Brewer brewer = new Brewer();
-
-                brewer.setId(jsonObject.getInt("id"));
-                brewer.setName(jsonObject.getString("name"));
-                brewer.setTemp(jsonObject.getInt("temp"));
-                brewer.setOverview(jsonObject.getString("overview"));
-                brewer.setHowItWorks(jsonObject.getString("howItWorks"));
-                brewer.setHistory(jsonObject.getString("history"));
-                brewer.setSteps(jsonObject.getString("steps"));
-                brewer.setRating(jsonObject.getInt("rating"));
+                Brewer brewer = new Brewer(jsonObject);
                 Log.d("MTAG", "Adding a new brewer "+brewer.getName());
+                brewer.downloadImgInBackground();
                 mAdapter.add(brewer);
-                if (brewer.getTemp() == 1)
-                    hotBrewers.add(brewer);
-                else
-                    coldBrewers.add(brewer);
             }
-            // Add empty spinner items:
-            Brewer empty = new Brewer();
-            empty.setId(-1);
-            empty.setName("--Select a Coffee Brewer--");
-            hotBrewers.add(0,empty);
-            coldBrewers.add(0,empty);
-
         }
         catch (JSONException e)
         {
@@ -317,48 +243,6 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(sRESULTS,results);
         editor.apply();
-
-    }
-
-
-    /**
-     * ManagePhotoDownloads()
-     * Connects to the storage directory and reads the files loaded
-     * Calls DownloadPicTask on all missing pics
-     */
-    private void ManagePhotoDownloads() {
-        int i = 0;
-        int b = hotBrewers.size()+coldBrewers.size()-2;
-        String imagePath = "/Love2BrewData";
-        File sdCard = Environment.getExternalStorageDirectory();
-        File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
-        //Race Condition - ensure directory exists
-        storageDir.mkdirs();
-        File[] filelist = null;
-
-        //get listing of all picture files
-        if (storageDir.isDirectory() && storageDir.exists()) {
-            filelist = storageDir.listFiles();
-        }
-
-        //Check if each file has been downloaded already
-        if (filelist == null || filelist.length > 0) {
-            for (int q = 0; q < b; q++) {
-
-                //Log.d(MTAG,"HI "+filelist[i].getName());
-                if (filelist[i].getName().equals("PNG_BREWER_" + q + ".png")) {
-                    if (i != filelist.length)
-                        i++;
-
-                } else {
-                    new DownloadPicTask().execute(q + 1);
-                }
-            }
-        }
-        //First time files are loaded
-        else
-            for (int h=0; h < b; h++)
-                new DownloadPicTask().execute(h + 1);
     }
 
 
@@ -368,7 +252,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      * @param l - reference to listView
      * @param v - reference to View
      * @param position - position in ListView
-     * @param id
+     * @param id -
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -380,8 +264,8 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
     /**
      * onCreateOptionsMenu()
      * Inflates Menu
-     * @param menu
-     * @return
+     * @param menu reference to menu object
+     * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -395,7 +279,7 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
      * onOptionsItemSelected()
      * Alarm Button Opens dialog to set an alarm
      * @param item - reference to menu item selected
-     * @return
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -454,129 +338,11 @@ public class MainActivity extends ListActivity implements GetHttp.IGetHttpListen
     }
 
 
-    /**
-     * PopToast() Display quick messages to user
-     * @param text - Message to be sent to Toast
-     */
-    public void PopToast(String text){
-        Toast.makeText(this,text,Toast.LENGTH_SHORT).show();
-    }
-
-
-    /**
-     * onYesClick() Callback method from AlarmDialogFrag to call PopToast
-     * @param position - position in Brewer arraylist
-     * @param tag - Hot or Cold Brewer
-     */
     @Override
-    public void onSwitch(int position,int tag) {
-        OpenBrewer(position,tag);
+    public void onPicDownloadSuccess() {
+        Log.d("Download", "Listener Alerted");
+        mAdapter.notifyDataSetChanged();
     }
-
-
-    /**
-     * getHotBrewer() Callback to return ArrayList of Hot Coffee Brewers
-     * @return ArrayList of Coffee Brewers
-     */
-    @Override
-    public ArrayList<Brewer> getHotBrewer() {
-        return hotBrewers;
-    }
-
-
-    /**
-     * getColdBrewer() Callback to return ArrayList of Cold Coffee Brewers
-     * @return ArrayList of Coffee Brewers
-     */
-    @Override
-    public ArrayList<Brewer> getColdBrewer() {
-        return coldBrewers;
-    }
-
 }// End - MainActivity Class
 
 
-/**
- * DownloadPicTask Class
- * Class Hosts an Async Task used to download images from the web service
- */
-class DownloadPicTask extends AsyncTask<Integer, Integer, Void> {
-
-
-    /**
-     * doInBackground()
-     * Define filename
-     * connect to pictures dictionary
-     * open file stream and download bitmap
-     * @param Pos - Position integer identifies which image # to download
-     * @return - None
-     */
-    @Override
-    protected Void doInBackground(Integer... Pos) {
-        // Create an image file name
-        int position = Pos[0];
-        String imagePath = "/Love2BrewData";
-        String imageFileName = "PNG_BREWER_" + position;
-        String sourceFileName =
-                "http://coffee.sreinhardt.com/Content/images/image"+position+".png";
-        //Establish File Directory
-        File sdCard = Environment.getExternalStorageDirectory();
-        File storageDir = new File(sdCard.getAbsolutePath()+imagePath);
-        storageDir.mkdirs();
-        //Log.d(MainActivity.MTAG, "Directory: " + storageDir);
-        //Create new file for image
-        File file = new File(storageDir, imageFileName + ".png");
-
-        //Declare bitmap and FileStream
-        Bitmap bmp;
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // Begin download of image
-        try {
-            java.net.URL url = new java.net.URL(sourceFileName);
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if(responseCode == HttpURLConnection.HTTP_OK) {
-                //Log.d("AAA", "Good Connection");
-                InputStream input = connection.getInputStream();
-                bmp = BitmapFactory.decodeStream(input);
-                //return myBitmap;
-                if (bmp == null)
-                    Log.d("AAA", "Null bitmap");
-                else {
-                    //Log.d("AAA", "Good bitmap");
-                    bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
-                    assert fos != null;
-                    fos.flush();
-                    fos.close();
-                }
-            }
-            else
-                Log.d("AAA", "Bad Connection");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return null;
-    }
-
-}//end - DownloadPicTask Class
-
-
-/**
- * DialogClickListener
- * Callback interface for DialogFragments
- */
-interface SwitchBrewerListener {
-    public void onSwitch(int position, int tag);
-    public ArrayList<Brewer> getHotBrewer();
-    public ArrayList<Brewer> getColdBrewer();
-}
