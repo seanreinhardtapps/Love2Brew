@@ -1,15 +1,26 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+    //AMAZON
+    compileSdkVersion "Amazon.com:Amazon Fire Phone SDK Addon:17"
+    buildToolsVersion "21.1.2"
+
+    //GOOGLE
+    //compileSdkVersion 21
+    //buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "com.apps.reinhardt2.love2brew"
-        minSdkVersion 16
-        targetSdkVersion 21
         versionCode 2
         versionName "1.1"
+
+        //GOOGLE
+        //minSdkVersion 16
+        //targetSdkVersion 21
+
+        //AMAZON
+        minSdkVersion 17
+        targetSdkVersion 17
     }
     buildTypes {
         release {
