@@ -1,13 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    //AMAZON
-    compileSdkVersion "Amazon.com:Amazon Fire Phone SDK Addon:17"
-    buildToolsVersion "21.1.2"
 
-    //GOOGLE
-    //compileSdkVersion 21
-    //buildToolsVersion "20.0.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.apps.reinhardt2.love2brew"
@@ -15,24 +11,20 @@ android {
         versionName "1.1"
 
         //GOOGLE
-        //minSdkVersion 16
-        //targetSdkVersion 21
+        minSdkVersion 16
+        targetSdkVersion 23
 
-        //AMAZON
-        minSdkVersion 17
-        targetSdkVersion 17
     }
     buildTypes {
         release {
 
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v13:21.0.2'
-    compile files('libs/org.apache.commons.net_2.0.0.v200905272248.jar')
+    testCompile 'junit:junit:4.12'
 }

@@ -2,18 +2,13 @@
 
 buildscript {
     repositories {
-        //GOOGLE
-        //jcenter()
 
-        //AMAZON
-        mavenCentral()
+        jcenter()
+
     }
     dependencies {
-        //GOOGLE
-        //classpath 'com.android.tools.build:gradle:1.0.0'
 
-        //AMAZON
-        classpath 'com.amazon.device.tools.build:gradle:1.0.+'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 
 
@@ -23,4 +18,8 @@ allprojects {
     repositories {
         jcenter()
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
